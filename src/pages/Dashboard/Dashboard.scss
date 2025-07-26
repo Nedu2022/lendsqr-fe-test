@@ -1,0 +1,38 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+
+.dashboard {
+  display: flex;
+  min-height: 100vh;
+  font-family: 'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: $background-light;
+}
+
+.main-content {
+  flex: 1;
+  margin-left: 283px;
+  display: flex;
+  flex-direction: column;
+
+  @include tablet {
+    margin-left: 0;
+  }
+}
+
+.content {
+  flex: 1;
+  padding: $spacing-5xl;
+
+  @include tablet {
+    padding: $spacing-xl;
+  }
+
+  @include mobile {
+    padding: $spacing-lg;
+  }
+
+  @include desktop {
+    padding: $spacing-5xl 80px;
+  }
+}

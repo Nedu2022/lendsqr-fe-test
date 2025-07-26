@@ -1,0 +1,136 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+
+.header {
+  background: $background-light;
+  border-bottom: 1px solid $border-color;
+  padding: 0 $spacing-5xl;
+  height: 100px;
+  @include flex-between;
+
+  @include tablet {
+    padding: 0 $spacing-xl;
+    height: 80px;
+  }
+
+  @include mobile {
+    padding: 0 $spacing-lg;
+    height: 70px;
+    display: none;
+  }
+
+  &-left h1 {
+    font-size: $spacing-xl;
+    font-weight: $font-medium;
+    color: $primary-color;
+    margin: 0;
+
+    @include mobile {
+      font-size: $spacing-xl;
+    }
+  }
+
+  &-right {
+    @include flex-align;
+    gap: 50px;
+
+    @include tablet {
+      gap: $spacing-lg;
+    }
+
+    @include mobile {
+      gap: $spacing-md;
+    }
+  }
+}
+
+.search-container {
+  position: relative;
+  @include flex-align;
+
+  @include mobile {
+    display: none;
+  }
+
+  .search-input {
+    width: 400px;
+    height: $spacing-4xl;
+    border: 1px solid rgba(33, 63, 125, 0.2);
+    border-radius: $border-radius-md 0 0 $border-radius-md;
+    padding: 0 $spacing-lg;
+    font-size: 14px;
+    outline: none;
+
+    @include tablet {
+      width: 250px;
+    }
+
+    @include desktop {
+      width: 500px;
+    }
+
+    &::placeholder {
+      color: $text-light;
+    }
+  }
+
+  .search-btn {
+    width: 56px;
+    height: $spacing-4xl;
+    background: $secondary-color;
+    border: none;
+    border-radius: 0 $border-radius-md $border-radius-md 0;
+    @include flex-center;
+    cursor: pointer;
+  }
+}
+
+.user-section {
+  @include flex-align;
+  gap: $spacing-3xl;
+
+  @include tablet {
+    gap: $spacing-lg;
+  }
+
+  @include mobile {
+    gap: $spacing-md;
+  }
+
+  .docs-link {
+    color: $primary-color;
+    text-decoration: underline;
+    font-size: $spacing-lg;
+
+    @include tablet {
+      display: none;
+    }
+  }
+
+  .notification-icon {
+    width: $spacing-xl;
+    height: $spacing-xl;
+    color: $primary-color;
+    cursor: pointer;
+  }
+
+  .user-profile {
+    @include flex-align;
+    gap: $spacing-md;
+    cursor: pointer;
+
+    .avatar {
+      @include avatar(48px, 16px);
+
+      @include mobile {
+        @include avatar(36px, 14px);
+      }
+    }
+
+    .username {
+      color: $primary-color;
+      font-weight: $font-medium;
+    }
+  }
+}

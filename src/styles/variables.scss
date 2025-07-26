@@ -6,11 +6,13 @@
   --text-light: #545f7d;
   --text-muted: #9ea3b5;
   --background-light: #fbfbfb;
+  --background-dark: #FEFEFE;
   --white: #ffffff;
   --border-color: #e5e9f2;
   --error-color: #e4033b;
-
-  --font-family: "Work Sans", "Avenir Next", sans-serif;
+  --font-family: 'Work Sans', 'Avenir Next', sans-serif;
+  
+  // Font sizes
   --font-size-xs: 0.75rem;
   --font-size-sm: 0.875rem;
   --font-size-base: 1rem;
@@ -19,18 +21,39 @@
   --font-size-2xl: 1.5rem;
   --font-size-3xl: 1.875rem;
   --font-size-4xl: 2.25rem;
-
+  --font-size-5xl: 2.6rem;
+  
+  // Spacing
   --spacing-xs: 0.25rem;
   --spacing-sm: 0.5rem;
   --spacing-md: 1rem;
   --spacing-lg: 1.5rem;
   --spacing-xl: 2rem;
-  --spacing-2xl: 3rem;
+  --spacing-2xl: 4rem;
+  --spacing-3xl: 4rem;
+  --spacing-4xl: 5rem;
+  --spacing-5xl: 6rem;
+  --spacing-6xl: 20rem;
+  --spacing-7xl: 24rem;
 
+  // font weights
+--font-thin: 100;
+--font-extra-light: 200;
+--font-light: 300;
+--font-normal: 400;
+--font-medium: 500;
+--font-semibold: 600;
+--font-bold: 700;
+--font-extra-bold: 800;
+--font-black: 900;
+
+  
+  // Border radius
   --border-radius: 0.25rem;
   --border-radius-md: 0.5rem;
   --border-radius-lg: 0.75rem;
-
+  
+  // Shadows
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);

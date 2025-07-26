@@ -1,0 +1,122 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  display: none;
+
+  &.show {
+    display: block;
+  }
+}
+
+.sidebar {
+  width: 283px;
+  background: $background-light;
+  border-right: 1px solid $border-color;
+  padding: 0;
+  position: fixed;
+  height: 100vh;
+  overflow-y: auto;
+  z-index: 1000;
+  transform: translateX(0);
+  transition: transform 0.3s ease;
+
+  &.mobile {
+    transform: translateX(-100%);
+
+    &.open {
+      transform: translateX(0);
+    }
+  }
+}
+
+.sidebar-content {
+  padding: $spacing-3xl 0;
+}
+
+.logo {
+  padding: 0 $spacing-3xl $spacing-4xl;
+  @include flex-align;
+  gap: $spacing-sm;
+
+  &-icon {
+    width: $spacing-xl;
+    height: $spacing-xl;
+    background: $secondary-color;
+    border-radius: 50%;
+    @include flex-center;
+    color: $white;
+    font-weight: $font-semibold;
+    font-size: 14px;
+  }
+
+  &-text {
+    font-size: $spacing-xl;
+    font-weight: $font-semibold;
+    color: $primary-color;
+  }
+}
+
+.org-switcher {
+  padding: 0 $spacing-3xl $spacing-4xl;
+  @include flex-align;
+  gap: $spacing-md;
+  color: $primary-color;
+  cursor: pointer;
+
+  .org-icon {
+    width: $spacing-lg;
+    height: $spacing-lg;
+    color: $primary-color;
+  }
+}
+
+.nav-section {
+  margin-bottom: $spacing-4xl;
+
+  &-title {
+    font-size: $spacing-md;
+    font-weight: $font-medium;
+    color: $text-light;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 0 $spacing-3xl $spacing-lg;
+  }
+}
+
+.nav-item {
+  @include flex-align;
+  gap: $spacing-md;
+  padding: $spacing-md $spacing-3xl;
+  color: $primary-color;
+  text-decoration: none;
+  font-size: $spacing-lg;
+  font-weight: $font-medium;
+  transition: all 0.2s;
+  cursor: pointer;
+
+  &:hover {
+    background: rgba(57, 205, 204, 0.06);
+    border-right: 3px solid $secondary-color;
+  }
+
+  &.active {
+    background: rgba(57, 205, 204, 0.06);
+    border-right: 3px solid $secondary-color;
+    color: $secondary-color;
+  }
+
+  .nav-icon {
+    width: $spacing-lg;
+    height: $spacing-lg;
+    opacity: 0.6;
+  }
+}

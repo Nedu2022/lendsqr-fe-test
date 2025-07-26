@@ -1,6 +1,9 @@
+@use '../../styles/mixins' as *;
+
 .login-container {
   display: flex;
   min-height: 100vh;
+  overflow: hidden;
   background-color: var(--white);
   font-family: var(--font-family);
 }
@@ -12,25 +15,14 @@
   flex-direction: column;
   background-color: var(--white);
   position: relative;
-}
-
-.logo {
-  margin-bottom: var(--spacing-2xl);
-  
-  &-img {
-    height: 36px;
-    width: auto;
-  }
+  box-shadow: var(--shadow-lg);
 }
 
 .illustration-container {
   flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  @include flex-center;
   max-width: 600px;
-  margin: 0 auto;
-  
+
   .login-illustration {
     width: 100%;
     height: auto;
@@ -41,12 +33,10 @@
 
 .login-right {
   flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  @include flex-center;
   padding: var(--spacing-2xl);
   background-color: var(--white);
-  box-shadow: var(--shadow-md);
+  box-shadow: -4px 0 15px rgba(0, 0, 0, 0.1);
 }
 
 .login-form-container {
@@ -57,15 +47,15 @@
 .login-header {
   margin-bottom: var(--spacing-2xl);
   text-align: left;
-  
+
   .login-title {
-    font-size: var(--font-size-4xl);
+    font-size: var(--font-size-5xl);
     font-weight: 700;
     color: var(--text-dark);
     margin-bottom: var(--spacing-sm);
     line-height: 1.2;
   }
-  
+
   .login-subtitle {
     font-size: var(--font-size-xl);
     color: var(--text-light);
@@ -86,22 +76,21 @@
 }
 
 .form-input {
+  @include input-base;
   width: 100%;
+  min-width: 447px;
   padding: var(--spacing-md) var(--spacing-lg);
   border: 2px solid var(--border-color);
   border-radius: var(--border-radius-md);
   font-size: var(--font-size-base);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
   background-color: var(--white);
-  font-family: inherit;
   box-sizing: border-box;
-  
+
   &:focus {
-    outline: none;
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.1);
+    box-shadow: 0 0 0 3px rgba(57, 205, 204, 0.1);
   }
-  
+
   &::placeholder {
     color: var(--text-muted);
   }
@@ -110,36 +99,31 @@
 .password-input-container {
   position: relative;
   width: 100%;
-  
+
   .password-input {
     width: 100%;
-    padding-right: 60px;
+    padding-right: 4rem;
   }
 }
 
 .password-toggle {
+  @include button-reset;
   position: absolute;
-  right: var(--spacing-md);
+  left: var(--spacing-7xl);
   top: 50%;
   transform: translateY(-50%);
-  background: none;
-  border: none;
   color: var(--primary-color);
   font-size: var(--font-size-xs);
   font-weight: 600;
   letter-spacing: 0.5px;
-  cursor: pointer;
   transition: color 0.2s ease;
   font-family: inherit;
-  padding: var(--spacing-xs);
   z-index: 2;
   pointer-events: auto;
-  min-width: 44px; // Minimum touch target size
+  min-width: 44px;
   min-height: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  
+  @include flex-center;
+
   &:hover,
   &:focus {
     color: var(--primary-dark);
@@ -150,7 +134,7 @@
 .forgot-password {
   text-align: left;
   margin-top: calc(-1 * var(--spacing-sm));
-  
+
   .forgot-link {
     color: var(--primary-color);
     font-size: var(--font-size-xs);
@@ -160,7 +144,7 @@
     transition: color 0.2s ease;
     padding: var(--spacing-xs);
     display: inline-block;
-    
+
     &:hover,
     &:focus {
       color: var(--primary-dark);
@@ -169,47 +153,38 @@
 }
 
 .login-button {
+  @include button-primary;
   padding: var(--spacing-md) var(--spacing-lg);
-  background-color: var(--primary-color);
-  color: var(--white);
-  border: none;
-  border-radius: var(--border-radius-md);
   font-size: var(--font-size-base);
   font-weight: 600;
   letter-spacing: 0.5px;
-  cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.1s ease;
   margin-top: var(--spacing-md);
-  font-family: inherit;
   min-height: 48px;
+  min-width: 447px;
   width: 100%;
-  
+
   &:hover {
-    background-color: var(--primary-dark);
     transform: translateY(-1px);
   }
-  
+
   &:active {
     transform: translateY(0);
   }
 }
 
-/* Enhanced Responsive Design */
-
-// Large tablets and small desktops
+// Responsive design
 @media (max-width: 1200px) {
   .login-container {
     min-height: 100vh;
   }
-  
+
   .login-left,
   .login-right {
     padding: var(--spacing-xl);
   }
 }
 
-// Tablets
-@media (max-width: 1024px) {
+@include tablet {
   .login-container {
     flex-direction: column;
     min-height: 100vh;
@@ -219,21 +194,17 @@
     flex: 0 0 auto;
     min-height: 40vh;
     padding: var(--spacing-xl) var(--spacing-xl) var(--spacing-lg);
-    
+
     .logo {
       margin-bottom: var(--spacing-lg);
       text-align: center;
-      
-      &-img {
-        height: 32px;
-      }
     }
   }
 
   .illustration-container {
     max-height: 250px;
     margin-bottom: var(--spacing-lg);
-    
+
     .login-illustration {
       max-height: 200px;
     }
@@ -244,38 +215,31 @@
     padding: var(--spacing-lg) var(--spacing-xl) var(--spacing-2xl);
     box-shadow: none;
   }
-  
+
   .login-header {
     text-align: center;
     margin-bottom: var(--spacing-xl);
   }
 }
 
-// Mobile landscape and small tablets
 @media (max-width: 768px) {
   .login-left {
     padding: var(--spacing-lg);
-    min-height: 35vh;
-    
+    min-height: 50vh;
+    justify-content: center;
+    align-items: flex-start;
+    box-shadow: none;
+
     .logo {
       margin-bottom: var(--spacing-md);
-      
-      &-img {
-        height: 28px;
-      }
     }
   }
 
   .illustration-container {
     max-height: 200px;
-    
+
     .login-illustration {
       max-height: 160px;
-    }
-
-    img {
-      width: 100%;
-      object-fit: cover;
     }
   }
 
@@ -285,7 +249,7 @@
 
   .login-header {
     margin-bottom: var(--spacing-lg);
-    
+
     .login-title {
       font-size: var(--font-size-3xl);
       margin-bottom: var(--spacing-xs);
@@ -295,49 +259,54 @@
       font-size: var(--font-size-lg);
     }
   }
-  
+
   .login-form {
     gap: var(--spacing-md);
   }
-  
+
   .form-input {
     padding: var(--spacing-md);
     font-size: var(--font-size-base);
+    min-width: 100%;
   }
-  
+
+  .password-toggle {
+    left: var(--spacing-6xl);
+  }
+
   .login-button {
     padding: var(--spacing-md);
     font-size: var(--font-size-base);
     min-height: 50px;
+    min-width: 100%;
     margin-top: var(--spacing-lg);
   }
 }
 
-// Mobile portrait
-@media (max-width: 480px) {
+@include mobile {
   .login-container {
     min-height: 100vh;
   }
-  
+
   .login-left {
     padding: var(--spacing-md) var(--spacing-lg);
     min-height: 50vh;
     justify-content: center;
     align-items: flex-start;
-    
+
     .logo {
       margin-bottom: var(--spacing-sm);
-      
+
       &-img {
-        height: 24px;
+        width: 100%;
+        object-fit: cover;
       }
     }
   }
-  
+
   .illustration-container {
-    max-height: 150px;
     margin-bottom: var(--spacing-md);
-    
+
     .login-illustration {
       max-height: 120px;
     }
@@ -350,10 +319,10 @@
   .login-form-container {
     max-width: 100%;
   }
-  
+
   .login-header {
     margin-bottom: var(--spacing-lg);
-    
+
     .login-title {
       font-size: var(--font-size-2xl);
       margin-bottom: var(--spacing-xs);
@@ -383,11 +352,11 @@
     min-height: 40px;
     padding: var(--spacing-xs);
   }
-  
+
   .forgot-password {
     margin-top: var(--spacing-xs);
     text-align: center;
-    
+
     .forgot-link {
       font-size: 11px;
       padding: var(--spacing-sm);
@@ -403,32 +372,31 @@
   }
 }
 
-// Very small mobile devices
 @media (max-width: 360px) {
   .login-left {
     padding: var(--spacing-sm) var(--spacing-md);
     min-height: 25vh;
   }
-  
+
   .login-right {
     padding: var(--spacing-md);
   }
-  
+
   .login-header {
     .login-title {
       font-size: var(--font-size-xl);
     }
-    
+
     .login-subtitle {
       font-size: var(--font-size-sm);
     }
   }
-  
+
   .form-input {
     padding: var(--spacing-sm);
     min-height: 44px;
   }
-  
+
   .password-toggle {
     min-width: 36px;
     min-height: 36px;
@@ -436,56 +404,54 @@
   }
 }
 
-
 @media (max-height: 600px) and (orientation: landscape) {
   .login-container {
     flex-direction: row;
   }
-  
+
   .login-left {
     flex: 0 0 40%;
     min-height: 100vh;
     padding: var(--spacing-md);
-    
+
     .logo {
       margin-bottom: var(--spacing-sm);
     }
   }
-  
+
   .illustration-container {
     max-height: 200px;
-    
+
     .login-illustration {
       max-height: 150px;
     }
   }
-  
+
   .login-right {
     flex: 1;
     padding: var(--spacing-md) var(--spacing-lg);
   }
-  
+
   .login-header {
     margin-bottom: var(--spacing-md);
     text-align: left;
-    
+
     .login-title {
       font-size: var(--font-size-2xl);
       margin-bottom: var(--spacing-xs);
     }
-    
+
     .login-subtitle {
       font-size: var(--font-size-sm);
     }
   }
-  
+
   .login-form {
     gap: var(--spacing-sm);
   }
-  
+
   .login-button {
     margin-top: var(--spacing-sm);
     min-height: 44px;
   }
 }
-

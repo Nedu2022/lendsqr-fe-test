@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import LogoImg from '../assets/Logo.svg';
-import LoginImg from '../assets/Login.svg';
-import '../styles/Login.scss';
-import '../styles/variables.scss';
+import LogoImg from '../../assets/Logo.svg';
+import LoginImg from '../../assets/Login.svg';
+import './Login.scss';
+import '../../styles/variables.scss'
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -36,7 +36,7 @@ const Login = () => {
         </div>
 
         <div className="illustration-container">
-          <img src={LoginImg} alt="Login Image" />
+          <img src={LoginImg} alt="Login Image" className='logo-img' />
         </div>
       </div>
 

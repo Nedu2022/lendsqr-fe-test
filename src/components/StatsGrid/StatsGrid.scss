@@ -1,0 +1,94 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 26px;
+  margin-bottom: $spacing-xl;
+
+  @include tablet {
+    grid-template-columns: repeat(2, 1fr);
+    gap: $spacing-lg;
+  }
+
+  @include mobile {
+    grid-template-columns: 1fr;
+    gap: $spacing-md;
+    margin-bottom: $spacing-xl;
+  }
+}
+
+.stat-card {
+  background: $white;
+  border: 1px solid rgba(33, 63, 125, 0.06);
+  border-radius: $border-radius;
+  padding: $spacing-3xl;
+
+  @include tablet {
+    padding: $spacing-xl;
+  }
+
+  @include mobile {
+    padding: $spacing-lg;
+  }
+}
+
+.stat-icon {
+  width: $spacing-4xl;
+  height: $spacing-4xl;
+  border-radius: 50%;
+  @include flex-center;
+  margin-bottom: 14px;
+
+  @include mobile {
+    width: 32px;
+    height: 32px;
+    margin-bottom: $spacing-sm;
+  }
+
+  &.users {
+    background: rgba($users-color, 0.1);
+    color: $users-color;
+  }
+
+  &.active {
+    background: rgba($active-users-color, 0.1);
+    color: $active-users-color;
+  }
+
+  &.loans {
+    background: rgba($loans-color, 0.1);
+    color: $loans-color;
+  }
+
+  &.savings {
+    background: rgba($savings-color, 0.1);
+    color: $savings-color;
+  }
+}
+
+.stat-label {
+  font-size: 14px;
+  font-weight: $font-medium;
+  color: $text-light;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: $spacing-md;
+
+  @include mobile {
+    font-size: $spacing-md;
+    margin-bottom: $spacing-sm;
+  }
+}
+
+.stat-value {
+  font-size: $spacing-xl;
+  font-weight: $font-semibold;
+  color: $primary-color;
+
+  @include mobile {
+    font-size: 18px;
+  }
+}

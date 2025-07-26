@@ -1,0 +1,55 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+
+.mobile-header {
+  display: none;
+  background: $background-light;
+  border-bottom: 1px solid $border-color;
+  padding: $spacing-lg $spacing-xl;
+  @include flex-between;
+
+  @include tablet {
+    display: flex;
+  }
+
+  @include mobile {
+    padding: $spacing-md $spacing-lg;
+  }
+
+  .mobile-menu-btn {
+    @include button-reset;
+    color: $primary-color;
+  }
+
+  .mobile-logo {
+    @include flex-align;
+    gap: $spacing-sm;
+
+    &-icon {
+      width: $spacing-xl;
+      height: $spacing-xl;
+      background: $secondary-color;
+      border-radius: 50%;
+      @include flex-center;
+      color: $white;
+      font-weight: $font-semibold;
+      font-size: $spacing-md;
+    }
+
+    &-text {
+      font-size: 18px;
+      font-weight: $font-semibold;
+      color: $primary-color;
+    }
+  }
+
+  .mobile-actions {
+    @include flex-align;
+    gap: $spacing-md;
+
+    .mobile-avatar {
+      @include avatar(32px, 12px);
+    }
+  }
+}

@@ -1,19 +1,19 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
-import './styles/App.module.scss'
-import './styles/variables.scss'
-import Login from './pages/Login'
+import { Routes, Route } from 'react-router-dom';
+import Login from './pages/Login/Login';
+// import Dashboard from './pages/Dashboard/Dashboard';
+import './styles/App.module.scss';
+import './styles/variables.scss';
 
-
-function App() {
+const App: React.FC = () => {
   return (
-    <Routes>
-       <Route path="/login" element={<Login />} />
-      {/* <Route path="/dashboard" element={isLoggedIn ? <Dashboard /> : <Navigate to="/login" />} />
-      <Route path="/users" element={isLoggedIn ? <Users /> : <Navigate to="/login" />} />
-      <Route path="/users/:id" element={isLoggedIn ? <UserDetails /> : <Navigate to="/login" />} /> */}
-      <Route path="*" element={<Navigate to="/login" />} />
-    </Routes>
-  )
-}
+    <div className="App">
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        {/* <Route path="/dashboard" element={<Dashboard />} /> */}
+        <Route path="/" element={<Login />} />
+      </Routes>
+    </div>
+  );
+};
 
-export default App
+export default App;
