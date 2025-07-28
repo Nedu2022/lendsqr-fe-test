@@ -1,55 +1,54 @@
 @use '../../styles/variables' as *;
 @use '../../styles/mixins' as *;
 
-
 .mobile-header {
   display: none;
-  background: $background-light;
-  border-bottom: 1px solid $border-color;
-  padding: $spacing-lg $spacing-xl;
-  @include flex-between;
+  background: var(--background-light);
+  border-bottom: 1px solid var(--border-color);
+  padding: var(--spacing-lg) var(--spacing-xl);
+//   @include flex-between;
 
   @include tablet {
     display: flex;
   }
 
   @include mobile {
-    padding: $spacing-md $spacing-lg;
+    padding: var(--spacing-md) var(--spacing-lg);
   }
 
   .mobile-menu-btn {
     @include button-reset;
-    color: $primary-color;
+    color: var(--primary-color);
   }
 
   .mobile-logo {
-    @include flex-align;
-    gap: $spacing-sm;
+    // @include flex-align;
+    gap: var(--spacing-sm);
 
     &-icon {
-      width: $spacing-xl;
-      height: $spacing-xl;
-      background: $secondary-color;
+      width: var(--spacing-xl);
+      height: var(--spacing-xl);
+      background: var(--secondary-color);
       border-radius: 50%;
       @include flex-center;
-      color: $white;
-      font-weight: $font-semibold;
-      font-size: $spacing-md;
+      color: var(--white);
+      font-weight: var(--font-semibold);
+      font-size: var(--spacing-md);
     }
 
     &-text {
       font-size: 18px;
-      font-weight: $font-semibold;
-      color: $primary-color;
+      font-weight: var(--font-semibold);
+      color: var(--primary-color);
     }
   }
 
   .mobile-actions {
-    @include flex-align;
-    gap: $spacing-md;
+    // @include flex-align;
+    gap: var(--spacing-md);
 
     .mobile-avatar {
-      @include avatar(32px, 12px);
+    //   @include avatar(32px, 12px);
     }
   }
 }

@@ -6,7 +6,7 @@
   display: flex;
   min-height: 100vh;
   font-family: 'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-  background-color: $background-light;
+  background-color: var(--background-light);
 }
 
 .main-content {
@@ -22,17 +22,17 @@
 
 .content {
   flex: 1;
-  padding: $spacing-5xl;
+  padding: var(--spacing-5xl);
 
   @include tablet {
-    padding: $spacing-xl;
+    padding: var(--spacing-xl);
   }
 
   @include mobile {
-    padding: $spacing-lg;
+    padding: var(--spacing-lg);
   }
 
   @include desktop {
-    padding: $spacing-5xl 80px;
+    padding: var(--spacing-5xl) 80px;
   }
 }

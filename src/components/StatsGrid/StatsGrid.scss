@@ -1,43 +1,42 @@
 @use '../../styles/variables' as *;
 @use '../../styles/mixins' as *;
 
-
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 26px;
-  margin-bottom: $spacing-xl;
+  margin-bottom: var(--spacing-xl);
 
   @include tablet {
     grid-template-columns: repeat(2, 1fr);
-    gap: $spacing-lg;
+    gap: var(--spacing-lg);
   }
 
   @include mobile {
     grid-template-columns: 1fr;
-    gap: $spacing-md;
-    margin-bottom: $spacing-xl;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-xl);
   }
 }
 
 .stat-card {
-  background: $white;
+  background: var(--white);
   border: 1px solid rgba(33, 63, 125, 0.06);
-  border-radius: $border-radius;
-  padding: $spacing-3xl;
+  border-radius: var(--border-radius);
+  padding: var(--spacing-3xl);
 
   @include tablet {
-    padding: $spacing-xl;
+    padding: var(--spacing-xl);
   }
 
   @include mobile {
-    padding: $spacing-lg;
+    padding: var(--spacing-lg);
   }
 }
 
 .stat-icon {
-  width: $spacing-4xl;
-  height: $spacing-4xl;
+  width: var(--spacing-4xl);
+  height: var(--spacing-4xl);
   border-radius: 50%;
   @include flex-center;
   margin-bottom: 14px;
@@ -45,48 +44,48 @@
   @include mobile {
     width: 32px;
     height: 32px;
-    margin-bottom: $spacing-sm;
+    margin-bottom: var(--spacing-sm);
   }
 
   &.users {
-    background: rgba($users-color, 0.1);
-    color: $users-color;
+    background: rgba(var(--users-color), 0.1);
+    color: var(--users-color);
   }
 
   &.active {
-    background: rgba($active-users-color, 0.1);
-    color: $active-users-color;
+    background: rgba(var(--active-users-color), 0.1);
+    color: var(--active-users-color);
   }
 
   &.loans {
-    background: rgba($loans-color, 0.1);
-    color: $loans-color;
+    background: rgba(var(--loans-color), 0.1);
+    color: var(--loans-color);
   }
 
   &.savings {
-    background: rgba($savings-color, 0.1);
-    color: $savings-color;
+    background: rgba(var(--savings-color), 0.1);
+    color: var(--savings-color);
   }
 }
 
 .stat-label {
   font-size: 14px;
-  font-weight: $font-medium;
-  color: $text-light;
+  font-weight: var(--font-medium);
+  color: var(--text-light);
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  margin-bottom: $spacing-md;
+  margin-bottom: var(--spacing-md);
 
   @include mobile {
-    font-size: $spacing-md;
-    margin-bottom: $spacing-sm;
+    font-size: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
   }
 }
 
 .stat-value {
-  font-size: $spacing-xl;
-  font-weight: $font-semibold;
-  color: $primary-color;
+  font-size: var(--spacing-xl);
+  font-weight: var(--font-semibold);
+  color: var(--primary-color);
 
   @include mobile {
     font-size: 18px;

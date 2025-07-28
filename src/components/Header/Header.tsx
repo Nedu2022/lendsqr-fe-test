@@ -1,18 +1,19 @@
 import React from 'react';
-import { Search, Bell, ChevronDown } from 'lucide-react';
+import { Search, ChevronDown } from 'lucide-react';
+import Logo from '../../assets/Logo.svg';
+import Adedeji from '../../assets/adedeji.svg';
+import notification from '../../assets/notification.svg';
 import './Header.scss';
 
-interface HeaderProps {
-  title: string;
-}
-
-const Header: React.FC<HeaderProps> = ({ title }) => {
+const Header: React.FC = () => {
   return (
     <div className="header">
       <div className="header-left">
-        <h1>{title}</h1>
+        <div className="logo-img">
+            <img src={Logo} alt="" />
+        </div>
       </div>
-      <div className="header-right">
+      <div className="header-center">
         <div className="search-container">
           <input 
             type="text" 
@@ -23,16 +24,22 @@ const Header: React.FC<HeaderProps> = ({ title }) => {
             <Search size={16} color="white" />
           </button>
         </div>
+      </div>
+      <div className="header-right">
         <div className="user-section">
-          <a href="#" className="docs-link">Docs</a>
-          <Bell className="notification-icon" />
+          <p href="#" className="docs-link">Docs</p>
+        <img src={notification} alt="Notification" />
           <div className="user-profile">
-            <div className="avatar">A</div>
+            <div className="avatar">
+              <img src={Adedeji} alt="User avatar" />
+            </div>
             <span className="username">Adedeji</span>
             <ChevronDown size={16} color="#213F7D" />
           </div>
         </div>
       </div>
+
+
     </div>
   );
 };

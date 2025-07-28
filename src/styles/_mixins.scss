@@ -4,6 +4,20 @@
   justify-content: center;
 }
 
+@mixin flex-align($justify: flex-start, $align: stretch, $direction: row, $wrap: nowrap) {
+  display: flex;
+  justify-content: $justify;
+  align-items: $align;
+  flex-direction: $direction;
+  flex-wrap: $wrap;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 @mixin input-base {
   font-family: var(--font-family);
   transition: all 0.2s ease;
@@ -29,6 +43,12 @@
   
   &:hover {
     background-color: var(--primary-dark);
+  }
+}
+
+@mixin desktop {
+  @media (min-width: 1025px) {
+    @content;
   }
 }
 

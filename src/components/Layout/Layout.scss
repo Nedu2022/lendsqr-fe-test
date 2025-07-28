@@ -1,0 +1,30 @@
+.layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.layout-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Sidebar (fixed width) */
+.sidebar {
+  width: 283px;
+  min-width: 283px;
+  background: var(--background-light);
+  border-right: 1px solid var(--border-color);
+  height: calc(100vh - 100px); // subtract header height
+  position: relative;
+  z-index: 10;
+}
+
+/* Main content beside sidebar */
+.layout-content {
+  flex: 1;
+  background: var(--background-light);
+  padding: 2rem;
+  overflow-y: auto;
+}

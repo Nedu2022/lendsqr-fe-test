@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import Sidebar from '../../components/Sidebar/Sidebar';
-import Header from '../../components/Header/Header';
-import MobileHeader from '../../components/MobileHeader/MobileHeader';
+import React, { useState} from 'react';
 import StatsGrid from '../../components/StatsGrid/StatsGrid';
 import UsersTable from '../../components/UsersTable/UsersTable';
 import type { User } from '../../types/index';
 import './Dashboard.scss';
+import Layout from '../../components/Layout/Layout';
 
 const Dashboard: React.FC = () => {
   const [users] = useState<User[]>([
@@ -83,37 +81,13 @@ const Dashboard: React.FC = () => {
     }
   ]);
 
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 1024);
-    };
-
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
 
   return (
-    <div className="dashboard">
-      <Sidebar 
-        isOpen={sidebarOpen}
-        isMobile={isMobile}
-        onClose={() => setSidebarOpen(false)}
-      />
 
-      <div className="main-content">
-        <MobileHeader onMenuClick={() => setSidebarOpen(true)} />
-        <Header title="Users" />
-        
-        <div className="content">
-          <StatsGrid />
-          <UsersTable users={users} />
-        </div>
-      </div>
-    </div>
+        <Layout>
+      <StatsGrid />
+      <UsersTable users={users} />
+    </Layout>
   );
 };
 

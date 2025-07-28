@@ -1,66 +1,80 @@
 @use '../../styles/variables' as *;
 @use '../../styles/mixins' as *;
 
-
 .header {
-  background: $background-light;
-  border-bottom: 1px solid $border-color;
-  padding: 0 $spacing-5xl;
-  height: 100px;
+  font-family: var(--font-ui);
+  background: var(--background-light);
+  padding: 0 var(--spacing-5xl);
+  box-shadow: var(--shadow-md);
+  height: 100%;
+  max-height: 100px;
+  z-index: 30;
   @include flex-between;
 
   @include tablet {
-    padding: 0 $spacing-xl;
+    padding: 0 var(--spacing-xl);
     height: 80px;
   }
 
   @include mobile {
-    padding: 0 $spacing-lg;
+    padding: 0 var(--spacing-lg);
     height: 70px;
-    display: none;
   }
 
-  &-left h1 {
-    font-size: $spacing-xl;
-    font-weight: $font-medium;
-    color: $primary-color;
-    margin: 0;
+  &-left {
+    flex: 0 0 auto;
+  }
+
+  &-center {
+    flex: 1;
+    @include flex-center;
+    max-width: 600px;
+    margin: 0 var(--spacing-xl);
+
+    @include tablet {
+      margin: 0 var(--spacing-lg);
+    }
 
     @include mobile {
-      font-size: $spacing-xl;
+      display: none;
     }
   }
 
   &-right {
-    @include flex-align;
-    gap: 50px;
+    flex: 0 0 auto;
+  }
+}
 
-    @include tablet {
-      gap: $spacing-lg;
-    }
+.logo-img {
+  @include flex-align;
+  gap: var(--spacing-sm);
+  font-weight: var(--font-bold);
+  font-size: var(--font-size-2xl);
 
-    @include mobile {
-      gap: $spacing-md;
-    }
+
+  &-text {
+    color: var(--secondary-color);
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-bold);
   }
 }
 
 .search-container {
   position: relative;
-  @include flex-align;
-
-  @include mobile {
-    display: none;
-  }
+  @include flex-center;
+  width: 100%;
+  max-width: 400px;
+  height: 40px;
 
   .search-input {
-    width: 400px;
-    height: $spacing-4xl;
+    @include input-base;
+    width: 100%;
+    height: 40px;
     border: 1px solid rgba(33, 63, 125, 0.2);
-    border-radius: $border-radius-md 0 0 $border-radius-md;
-    padding: 0 $spacing-lg;
-    font-size: 14px;
-    outline: none;
+    border-radius: var(--border-radius-md) 0 0 var(--border-radius-md);
+    padding: 0 var(--spacing-lg);
+    font-size: var(--font-size-sm);
+    border-right: none;
 
     @include tablet {
       width: 250px;
@@ -71,37 +85,53 @@
     }
 
     &::placeholder {
-      color: $text-light;
+      color: var(--text-muted);
+    }
+
+    &:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 1px var(--primary-color);
     }
   }
 
   .search-btn {
     width: 56px;
-    height: $spacing-4xl;
-    background: $secondary-color;
+    height: 40px;
+    background: var(--primary-color);
     border: none;
-    border-radius: 0 $border-radius-md $border-radius-md 0;
+    border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0;
     @include flex-center;
     cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: var(--primary-dark);
+    }
   }
 }
 
 .user-section {
-  @include flex-align;
-  gap: $spacing-3xl;
+  @include flex-center;
+  gap: var(--spacing-3xl);
 
   @include tablet {
-    gap: $spacing-lg;
+    gap: var(--spacing-lg);
   }
 
   @include mobile {
-    gap: $spacing-md;
+    gap: var(--spacing-md);
   }
 
   .docs-link {
-    color: $primary-color;
+    color: var(--secondary-color);
     text-decoration: underline;
-    font-size: $spacing-lg;
+    font-size: var(--font-size-base);
+    font-weight: var(--font-normal);
+    transition: all 0.2s ease;
+
+    &:hover {
+      color: var(--primary-color);
+    }
 
     @include tablet {
       display: none;
@@ -109,28 +139,53 @@
   }
 
   .notification-icon {
-    width: $spacing-xl;
-    height: $spacing-xl;
-    color: $primary-color;
+    width: var(--spacing-xl);
+    height: var(--spacing-xl);
+    color: var(--secondary-color);
     cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      color: var(--primary-color);
+    }
   }
 
   .user-profile {
-    @include flex-align;
-    gap: $spacing-md;
+    @include flex-center;
+    gap: var(--spacing-sm);
     cursor: pointer;
+    padding: var(--spacing-sm);
+    border-radius: var(--border-radius-md);
+    transition: all 0.2s ease;
+
 
     .avatar {
-      @include avatar(48px, 16px);
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      overflow: hidden;
+      @include flex-center;
 
       @include mobile {
-        @include avatar(36px, 14px);
+        width: 36px;
+        height: 36px;
+      }
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
       }
     }
 
     .username {
-      color: $primary-color;
-      font-weight: $font-medium;
+      color: var(--secondary-color);
+      font-weight: var(--font-medium);
+      font-size: var(--font-size-base);
+
+      @include mobile {
+        display: none;
+      }
     }
   }
 }
