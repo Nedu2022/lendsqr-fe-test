@@ -6,6 +6,7 @@
   grid-template-columns: repeat(4, 1fr);
   gap: 26px;
   margin-bottom: var(--spacing-xl);
+ 
 
   @include tablet {
     grid-template-columns: repeat(2, 1fr);
@@ -22,8 +23,10 @@
 .stat-card {
   background: var(--white);
   border: 1px solid rgba(33, 63, 125, 0.06);
-  border-radius: var(--border-radius);
-  padding: var(--spacing-3xl);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-xl);
+   box-shadow: var(--shadow-md);
+
 
   @include tablet {
     padding: var(--spacing-xl);
@@ -35,8 +38,8 @@
 }
 
 .stat-icon {
-  width: var(--spacing-4xl);
-  height: var(--spacing-4xl);
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   @include flex-center;
   margin-bottom: 14px;
@@ -45,26 +48,6 @@
     width: 32px;
     height: 32px;
     margin-bottom: var(--spacing-sm);
-  }
-
-  &.users {
-    background: rgba(var(--users-color), 0.1);
-    color: var(--users-color);
-  }
-
-  &.active {
-    background: rgba(var(--active-users-color), 0.1);
-    color: var(--active-users-color);
-  }
-
-  &.loans {
-    background: rgba(var(--loans-color), 0.1);
-    color: var(--loans-color);
-  }
-
-  &.savings {
-    background: rgba(var(--savings-color), 0.1);
-    color: var(--savings-color);
   }
 }
 
