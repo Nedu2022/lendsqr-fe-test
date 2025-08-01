@@ -1,9 +1,10 @@
-import React, { useState} from 'react';
+import React, { useState } from 'react';
 import StatsGrid from '../../components/StatsGrid/StatsGrid';
 import UsersTable from '../../components/UsersTable/UsersTable';
 import type { User } from '../../types/index';
 import './Dashboard.scss';
 import Layout from '../../components/Layout/Layout';
+import { Outlet } from 'react-router-dom';
 
 const Dashboard: React.FC = () => {
   const [users] = useState<User[]>([
@@ -81,12 +82,11 @@ const Dashboard: React.FC = () => {
     }
   ]);
 
-
   return (
-
-        <Layout>
+    <Layout>
       <StatsGrid />
       <UsersTable users={users} />
+      <Outlet />
     </Layout>
   );
 };
