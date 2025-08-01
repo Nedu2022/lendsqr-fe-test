@@ -1,13 +1,9 @@
-import React, { useState } from 'react';
-import { MoreVertical, Eye, UserX, UserCheck, Calendar, X } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { MoreVertical, Eye, UserX, UserCheck, Calendar, X, Loader } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import type { User } from '../../types/index';
 import filter from '../../assets/filter-results-button.svg'
 import './UsersTable.scss';
-
-interface UsersTableProps {
-  users: User[];
-}
 
 interface FilterState {
   organization: string;
@@ -18,10 +14,17 @@ interface FilterState {
   status: string;
 }
 
-const UsersTable: React.FC<UsersTableProps> = ({ users }) => {
+const UsersTable: React.FC = () => {
   const navigate = useNavigate();
+  const [users, setUsers] = useState<User[]>([]);
+  const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [dropdownOpen, setDropdownOpen] = useState<number | null>(null);
   const [filterModalOpen, setFilterModalOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(100);
+  const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
   const [filters, setFilters] = useState<FilterState>({
     organization: '',
     username: '',
@@ -30,6 +33,106 @@ const UsersTable: React.FC<UsersTableProps> = ({ users }) => {
     phoneNumber: '',
     status: ''
   });
+
+  // Fetch users from API
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch('https://68823e7e66a7eb81224df7e7.mockapi.io/api/v1/users');
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        // Transform the API data to match User interface
+        const transformedUsers: User[] = data.map((item: any) => ({
+          id: item.id,
+          organization: item.organisation || item.orgName || item.organization || 'Lendsqr',
+          username: item.personal_info?.full_name || 
+            item.userName || 
+            item.username || 
+            (item.profile?.firstName ? `${item.profile.firstName} ${item.profile.lastName || ''}`.trim() : item.profile?.firstName || 'User'),
+          email: item.personal_info?.email || 
+            item.email || 
+            item.profile?.email || 
+            `user${item.id}@example.com`,
+          phoneNumber: item.personal_info?.phone || 
+            item.profile?.phoneNumber || 
+            item.phoneNumber || 
+            item.phone || 
+            `+234${Math.floor(Math.random() * 9000000000 + 1000000000)}`,
+          dateJoined: item.date_joined ? new Date(parseInt(item.date_joined)).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+          }) : item.createdAt ? new Date(item.createdAt).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+          }) : new Date().toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+          }),
+          status: item.status ? 
+            (item.status.charAt(0).toUpperCase() + item.status.slice(1)) as 'Active' | 'Inactive' | 'Pending' | 'Blacklisted' :
+            ['Active', 'Inactive', 'Pending', 'Blacklisted'][Math.floor(Math.random() * 4)] as 'Active' | 'Inactive' | 'Pending' | 'Blacklisted'
+        }));
+        
+        setUsers(transformedUsers);
+        setFilteredUsers(transformedUsers);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to fetch users');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUsers();
+  }, []);
+
+  // Apply filters
+  useEffect(() => {
+    let filtered = users;
+
+    if (filters.organization) {
+      filtered = filtered.filter(user => 
+        user.organization.toLowerCase().includes(filters.organization.toLowerCase())
+      );
+    }
+
+    if (filters.username) {
+      filtered = filtered.filter(user => 
+        user.username.toLowerCase().includes(filters.username.toLowerCase())
+      );
+    }
+
+    if (filters.email) {
+      filtered = filtered.filter(user => 
+        user.email.toLowerCase().includes(filters.email.toLowerCase())
+      );
+    }
+
+    if (filters.phoneNumber) {
+      filtered = filtered.filter(user => 
+        user.phoneNumber.includes(filters.phoneNumber)
+      );
+    }
+
+    if (filters.status) {
+      filtered = filtered.filter(user => user.status === filters.status);
+    }
+
+    if (filters.date) {
+      filtered = filtered.filter(user => user.dateJoined === filters.date);
+    }
+
+    setFilteredUsers(filtered);
+    setCurrentPage(1); // Reset to first page when filters change
+  }, [filters, users]);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -51,9 +154,8 @@ const UsersTable: React.FC<UsersTableProps> = ({ users }) => {
     }
   };
 
-
-  const handleRowClick = (user: User, index: number) => {
-    const userId = user.username || user.email || `user-${index}`;
+  const handleRowClick = (user: User, globalIndex: number) => {
+    const userId = user.id || user.username || user.email || `user-${globalIndex}`;
     navigate(`/dashboard/users/${userId}`, { state: { user } });
   };
 
@@ -62,15 +164,34 @@ const UsersTable: React.FC<UsersTableProps> = ({ users }) => {
     setDropdownOpen(dropdownOpen === index ? null : index);
   };
 
-
-  const handleViewDetails = (e: React.MouseEvent, user: User, index: number) => {
+  const handleViewDetails = (e: React.MouseEvent, user: User, globalIndex: number) => {
     e.stopPropagation();
-    const userId = user.username || user.email || `user-${index}`;
+    const userId = user.id || user.username || user.email || `user-${globalIndex}`;
     navigate(`/dashboard/users/${userId}`, { state: { user } });
     setDropdownOpen(null);
   };
 
-  const handleFilterClick = () => {
+  const handleFilterClick = (event: React.MouseEvent) => {
+    const target = event.currentTarget;
+    const rect = target.getBoundingClientRect();
+    
+    // Calculate position relative to viewport
+    const top = rect.bottom + 8; // 8px spacing below the button
+    let left = rect.left;
+    
+    // Ensure modal doesn't go off screen
+    const modalWidth = 270;
+    const viewportWidth = window.innerWidth;
+    
+    if (left + modalWidth > viewportWidth - 20) {
+      left = viewportWidth - modalWidth - 20; // 20px margin from right edge
+    }
+    
+    if (left < 20) {
+      left = 20; // 20px margin from left edge
+    }
+    
+    setModalPosition({ top, left });
     setFilterModalOpen(true);
   };
 
@@ -93,8 +214,6 @@ const UsersTable: React.FC<UsersTableProps> = ({ users }) => {
   };
 
   const handleFilter = () => {
-    // Apply filters logic here
-    console.log('Applying filters:', filters);
     setFilterModalOpen(false);
   };
 
@@ -106,6 +225,38 @@ const UsersTable: React.FC<UsersTableProps> = ({ users }) => {
   const uniqueOrganizations = [...new Set(users.map(user => user.organization))];
   const uniqueStatuses = [...new Set(users.map(user => user.status))];
 
+  // Pagination logic
+  const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentUsers = filteredUsers.slice(startIndex, endIndex);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const handleItemsPerPageChange = (items: number) => {
+    setItemsPerPage(items);
+    setCurrentPage(1); // Reset to first page
+  };
+
+  if (loading) {
+    return (
+      <div className="loading-container">
+        <Loader className="loading-spinner" />
+        <span>Loading users...</span>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="error-container">
+        <div className="error-message">Error loading users: {error}</div>
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="table-container">
@@ -114,7 +265,7 @@ const UsersTable: React.FC<UsersTableProps> = ({ users }) => {
             <thead>
               <tr>
                 <th>
-                  <div className={`table-header ${filterModalOpen ? 'filter-active' : ''}`}>
+                  <div className="table-header">
                     Organization
                     <img 
                       src={filter} 
@@ -122,122 +273,6 @@ const UsersTable: React.FC<UsersTableProps> = ({ users }) => {
                       onClick={handleFilterClick}
                       style={{ cursor: 'pointer' }}
                     />
-                    {/* Filter Modal positioned relative to this header */}
-                    {filterModalOpen && (
-                      <>
-                        <div className="filter-modal-overlay" onClick={handleModalClose} />
-                        <div className="filter-modal" onClick={(e) => e.stopPropagation()}>
-                          <div className="filter-modal-header">
-                            <h3>Filter</h3>
-                            <button 
-                              className="filter-modal-close"
-                              onClick={handleModalClose}
-                              aria-label="Close modal"
-                            >
-                              <X size={16} />
-                            </button>
-                          </div>
-
-                          <div className="filter-modal-body">
-                            <div className="filter-field">
-                              <label htmlFor="organization">Organization</label>
-                              <select
-                                id="organization"
-                                className="filter-select"
-                                value={filters.organization}
-                                onChange={(e) => handleFilterChange('organization', e.target.value)}
-                              >
-                                <option value="">Select</option>
-                                {uniqueOrganizations.map(org => (
-                                  <option key={org} value={org}>{org}</option>
-                                ))}
-                              </select>
-                            </div>
-
-                            <div className="filter-field">
-                              <label htmlFor="username">Username</label>
-                              <input
-                                id="username"
-                                type="text"
-                                className="filter-input"
-                                placeholder="User"
-                                value={filters.username}
-                                onChange={(e) => handleFilterChange('username', e.target.value)}
-                              />
-                            </div>
-
-                            <div className="filter-field">
-                              <label htmlFor="email">Email</label>
-                              <input
-                                id="email"
-                                type="email"
-                                className="filter-input"
-                                placeholder="Email"
-                                value={filters.email}
-                                onChange={(e) => handleFilterChange('email', e.target.value)}
-                              />
-                            </div>
-
-                            <div className="filter-field">
-                              <label htmlFor="date">Date</label>
-                              <div className="date-input-wrapper">
-                                <input
-                                  id="date"
-                                  type="date"
-                                  className="filter-input date-input"
-                                  placeholder="Date"
-                                  value={filters.date}
-                                  onChange={(e) => handleFilterChange('date', e.target.value)}
-                                />
-                                <Calendar className="date-icon" size={16} />
-                              </div>
-                            </div>
-
-                            <div className="filter-field">
-                              <label htmlFor="phoneNumber">Phone Number</label>
-                              <input
-                                id="phoneNumber"
-                                type="tel"
-                                className="filter-input"
-                                placeholder="Phone Number"
-                                value={filters.phoneNumber}
-                                onChange={(e) => handleFilterChange('phoneNumber', e.target.value)}
-                              />
-                            </div>
-
-                            <div className="filter-field">
-                              <label htmlFor="status">Status</label>
-                              <select
-                                id="status"
-                                className="filter-select"
-                                value={filters.status}
-                                onChange={(e) => handleFilterChange('status', e.target.value)}
-                              >
-                                <option value="">Select</option>
-                                {uniqueStatuses.map(status => (
-                                  <option key={status} value={status}>{status}</option>
-                                ))}
-                              </select>
-                            </div>
-                          </div>
-
-                          <div className="filter-modal-footer">
-                            <button 
-                              className="filter-btn filter-btn-reset"
-                              onClick={handleReset}
-                            >
-                              Reset
-                            </button>
-                            <button 
-                              className="filter-btn filter-btn-apply"
-                              onClick={handleFilter}
-                            >
-                              Filter
-                            </button>
-                          </div>
-                        </div>
-                      </>
-                    )}
                   </div>
                 </th>
                 <th>
@@ -299,92 +334,271 @@ const UsersTable: React.FC<UsersTableProps> = ({ users }) => {
               </tr>
             </thead>
             <tbody>
-              {users.map((user, index) => (
-                <tr 
-                  key={index}
-                  className="user-row"
-                  onClick={() => handleRowClick(user, index)}
-                  style={{ cursor: 'pointer' }}
-                >
-                  <td>{user.organization}</td>
-                  <td>{user.username}</td>
-                  <td>{user.email}</td>
-                  <td>{user.phoneNumber}</td>
-                  <td>{user.dateJoined}</td>
-                  <td>
-                    <span
-                      className="status-badge"
-                      style={{
-                        color: getStatusColor(user.status),
-                        backgroundColor: getStatusBg(user.status)
-                      }}
-                    >
-                      {user.status}
-                    </span>
-                  </td>
-                  <td>
-                    <div className="action-menu">
-                      <button
-                        aria-label="Action"
-                        className="action-btn"
-                        onClick={(e) => handleActionClick(e, index)}
+              {currentUsers.map((user, index) => {
+                // Calculate the global index for proper identification
+                const globalIndex = startIndex + index;
+                return (
+                  <tr 
+                    key={user.id || globalIndex}
+                    className="user-row"
+                    onClick={() => handleRowClick(user, globalIndex)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <td data-label="Organization">{user.organization}</td>
+                    <td>{user.username}</td>
+                    <td>{user.email}</td>
+                    <td>{user.phoneNumber}</td>
+                    <td>{user.dateJoined}</td>
+                    <td>
+                      <span
+                        className="status-badge"
+                        style={{
+                          color: getStatusColor(user.status),
+                          backgroundColor: getStatusBg(user.status)
+                        }}
                       >
-                        <MoreVertical size={16} />
-                      </button>
-                      {dropdownOpen === index && (
-                        <div className="dropdown-menu">
-                          <button 
-                            className="dropdown-item"
-                            onClick={(e) => handleViewDetails(e, user, index)}
-                          >
-                            <Eye size={16} />
-                            View Details
-                          </button>
-                          <button 
-                            className="dropdown-item"
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            <UserX size={16} />
-                            Blacklist User
-                          </button>
-                          <button 
-                            className="dropdown-item"
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            <UserCheck size={16} />
-                            Activate User
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              ))}
+                        {user.status}
+                      </span>
+                    </td>
+                    <td>
+                      <div className="action-menu">
+                        <button
+                          aria-label="Action"
+                          className="action-btn"
+                          onClick={(e) => handleActionClick(e, index)}
+                        >
+                          <MoreVertical size={16} />
+                        </button>
+                        {dropdownOpen === index && (
+                          <div className="dropdown-menu">
+                            <button 
+                              className="dropdown-item"
+                              onClick={(e) => handleViewDetails(e, user, globalIndex)}
+                            >
+                              <Eye size={16} />
+                              View Details
+                            </button>
+                            <button 
+                              className="dropdown-item"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <UserX size={16} />
+                              Blacklist User
+                            </button>
+                            <button 
+                              className="dropdown-item"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <UserCheck size={16} />
+                              Activate User
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
       </div>
 
+      {/* Filter Modal - Now positioned outside the table */}
+      {filterModalOpen && (
+        <>
+          <div className="filter-modal-overlay" onClick={handleModalClose} />
+          <div 
+            className="filter-modal" 
+            style={{
+              top: `${modalPosition.top}px`,
+              left: `${modalPosition.left}px`
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="filter-modal-header">
+              <h3>Filter</h3>
+              <button 
+                className="filter-modal-close"
+                onClick={handleModalClose}
+                aria-label="Close modal"
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            <div className="filter-modal-body">
+              <div className="filter-field">
+                <label htmlFor="organization">Organization</label>
+                <select
+                  id="organization"
+                  className="filter-select"
+                  value={filters.organization}
+                  onChange={(e) => handleFilterChange('organization', e.target.value)}
+                >
+                  <option value="">Select</option>
+                  {uniqueOrganizations.map(org => (
+                    <option key={org} value={org}>{org}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="filter-field">
+                <label htmlFor="username">Username</label>
+                <input
+                  id="username"
+                  type="text"
+                  className="filter-input"
+                  placeholder="User"
+                  value={filters.username}
+                  onChange={(e) => handleFilterChange('username', e.target.value)}
+                />
+              </div>
+
+              <div className="filter-field">
+                <label htmlFor="email">Email</label>
+                <input
+                  id="email"
+                  type="email"
+                  className="filter-input"
+                  placeholder="Email"
+                  value={filters.email}
+                  onChange={(e) => handleFilterChange('email', e.target.value)}
+                />
+              </div>
+
+              <div className="filter-field">
+                <label htmlFor="date">Date</label>
+                <div className="date-input-wrapper">
+                  <input
+                    id="date"
+                    type="date"
+                    className="filter-input date-input"
+                    placeholder="Date"
+                    value={filters.date}
+                    onChange={(e) => handleFilterChange('date', e.target.value)}
+                  />
+                  <Calendar className="date-icon" size={16} />
+                </div>
+              </div>
+
+              <div className="filter-field">
+                <label htmlFor="phoneNumber">Phone Number</label>
+                <input
+                  id="phoneNumber"
+                  type="tel"
+                  className="filter-input"
+                  placeholder="Phone Number"
+                  value={filters.phoneNumber}
+                  onChange={(e) => handleFilterChange('phoneNumber', e.target.value)}
+                />
+              </div>
+
+              <div className="filter-field">
+                <label htmlFor="status">Status</label>
+                <select
+                  id="status"
+                  className="filter-select"
+                  value={filters.status}
+                  onChange={(e) => handleFilterChange('status', e.target.value)}
+                >
+                  <option value="">Select</option>
+                  {uniqueStatuses.map(status => (
+                    <option key={status} value={status}>{status}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="filter-modal-footer">
+              <button 
+                className="filter-btn filter-btn-reset"
+                onClick={handleReset}
+              >
+                Reset
+              </button>
+              <button 
+                className="filter-btn filter-btn-apply"
+                onClick={handleFilter}
+              >
+                Filter
+              </button>
+            </div>
+          </div>
+        </>
+      )}
+
       <div className="pagination">
         <div className="pagination-info">
-          Showing
-          <select className="pagination-select" aria-label="Items per page">
-            <option>100</option>
-            <option>50</option>
-            <option>25</option>
+          Showing {startIndex + 1} to {Math.min(endIndex, filteredUsers.length)} of
+          <select 
+            className="pagination-select" 
+            aria-label="Items per page"
+            value={itemsPerPage}
+            onChange={(e) => handleItemsPerPageChange(Number(e.target.value))}
+          >
+            <option value={10}>10</option>
+            <option value={25}>25</option>
+            <option value={50}>50</option>
+            <option value={100}>100</option>
           </select>
-          out of 100
+          out of {filteredUsers.length}
         </div>
 
         <div className="pagination-controls">
-          <button className="pagination-btn">‹</button>
-          <div className="pagination-btn active">1</div>
-          <button className="pagination-btn">2</button>
-          <button className="pagination-btn">3</button>
-          <span className="pagination-ellipsis">...</span>
-          <button className="pagination-btn">15</button>
-          <button className="pagination-btn">16</button>
-          <button className="pagination-btn">›</button>
+          <button 
+            className="pagination-btn"
+            onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
+            disabled={currentPage === 1}
+            style={{ opacity: currentPage === 1 ? 0.5 : 1 }}
+          >
+            ‹
+          </button>
+          
+          {/* Show page numbers */}
+          {totalPages > 0 && Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+            let pageNum;
+            if (totalPages <= 5) {
+              pageNum = i + 1;
+            } else if (currentPage <= 3) {
+              pageNum = i + 1;
+            } else if (currentPage >= totalPages - 2) {
+              pageNum = totalPages - 4 + i;
+            } else {
+              pageNum = currentPage - 2 + i;
+            }
+            
+            return (
+              <button
+                key={pageNum}
+                className={`pagination-btn ${currentPage === pageNum ? 'active' : ''}`}
+                onClick={() => handlePageChange(pageNum)}
+              >
+                {pageNum}
+              </button>
+            );
+          })}
+          
+          {totalPages > 5 && currentPage < totalPages - 2 && (
+            <>
+              <span className="pagination-ellipsis">...</span>
+              <button 
+                className="pagination-btn"
+                onClick={() => handlePageChange(totalPages)}
+              >
+                {totalPages}
+              </button>
+            </>
+          )}
+          
+          <button 
+            className="pagination-btn"
+            onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
+            disabled={currentPage === totalPages || totalPages === 0}
+            style={{ opacity: (currentPage === totalPages || totalPages === 0) ? 0.5 : 1 }}
+          >
+            ›
+          </button>
         </div>
       </div>
     </>

@@ -67,4 +67,9 @@
   --active-users-color: 57, 205, 204;  
   --loans-color: 255, 123, 0;
   --savings-color: 0, 153, 255;
+
+  $breakpoint-mobile: 576px;
+$breakpoint-tablet: 768px;
+$breakpoint-desktop: 992px;
+
 }

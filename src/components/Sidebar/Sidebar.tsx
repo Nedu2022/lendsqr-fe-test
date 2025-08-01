@@ -22,7 +22,6 @@ import preferences from '../../assets/preferences.svg';
 import badge from '../../assets/badge-percent.svg';
 import clipboard from '../../assets/clipboard-list.svg';
 
-
 interface SidebarProps {
   isOpen: boolean;
   isMobile: boolean;
@@ -32,14 +31,17 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, isMobile, onClose }) => {
   return (
     <>
-      <div
-        className={`sidebar-overlay ${isOpen ? 'show' : ''}`}
-        onClick={onClose}
-      />
+      {/* Overlay for mobile */}
+      {isMobile && (
+        <div
+          className={`sidebar-overlay ${isOpen ? 'show' : ''}`}
+          onClick={onClose}
+        />
+      )}
 
+      {/* Sidebar */}
       <div className={`sidebar ${isMobile ? 'mobile' : ''} ${isOpen ? 'open' : ''}`}>
         <div className="sidebar-content">
-
           <div className="org-switcher">
             <img src={briefcase} alt="Briefcase" />
             <span>Switch Organization</span>

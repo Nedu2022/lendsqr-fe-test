@@ -10,21 +10,118 @@
   overflow: hidden;
 }
 
-/* Sidebar (fixed width) */
-.sidebar {
-  width: 283px;
-  min-width: 283px;
-  background: var(--background-light);
-  border-right: 1px solid var(--border-color);
-  height: calc(100vh - 100px); // subtract header height
-  position: relative;
-  z-index: 10;
+
+.hamburger-menu {
+  position: fixed;
+  top: 47px;
+  left: 4px;
+  width: 50px;
+  height: 50px;
+  background: var(--primary-color); 
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.3s ease;
+
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  .hamburger-line {
+    width: 20px;
+    height: 2px;
+    background: white;
+    border-radius: 1px;
+    transition: all 0.3s ease;
+    transform-origin: center;
+  }
+
+
+  &.open {
+    .hamburger-line {
+      &:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+      }
+
+      &:nth-child(2) {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+
+      &:nth-child(3) {
+        transform: rotate(-45deg) translate(5px, -5px);
+      }
+    }
+  }
+
+
+  &:not(.open) {
+    animation: pulse 2s infinite;
+  }
 }
 
-/* Main content beside sidebar */
+@keyframes pulse{
+  0% {
+    box-shadow: 0 4px 12px rgba(57, 205, 204, 0.3);
+  }
+  50% {
+    box-shadow: 0 4px 20px rgba(57, 205, 204, 0.6);
+  }
+  100% {
+    box-shadow: 0 4px 12px rgba(57, 205, 204, 0.3);
+  }
+}
+
+
+
+.sidebar-wrapper {
+  width: 0;
+  min-width: 0;
+  transition: all 0.3s ease;
+  background: var(--background-light);
+  border-right: 1px solid var(--border-color);
+  overflow: hidden;
+
+  &.open {
+    width: 283px;
+    min-width: 283px;
+  }
+
+  &.closed {
+    width: 0;
+    min-width: 0;
+    border-right: none;
+  }
+}
+
+
 .layout-content {
   flex: 1;
   background: var(--background-light);
   padding: 2rem;
   overflow-y: auto;
+  transition: margin-left 0.3s ease;
+
+  &.sidebar-open {
+
+  }
+}
+
+
+@media (max-width: 767px) {
+  .layout-content {
+    padding: 1rem;
+    width: 100%;
+  }
+  
+  .layout-body {
+    padding-top: 0;
+  }
 }

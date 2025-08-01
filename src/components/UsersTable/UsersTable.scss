@@ -5,16 +5,33 @@
   background-color: var(--white);
   border-radius: var(--border-radius);
   border: 1px solid rgba(33, 63, 125, 0.06);
-  overflow: hidden;
+  overflow-y: auto;
   box-shadow: var(--shadow-lg);
+  position: relative;
 }
 
 .table-wrapper {
+  width: 100%;
   overflow-x: auto;
+  position: relative;
+
+
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+
+  &::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+  }
 }
 
 .table {
   width: 100%;
+  min-width: 800px;
   border-collapse: collapse;
   background: var(--white);
 
@@ -30,8 +47,7 @@
       color: var(--text-light);
       text-transform: uppercase;
       letter-spacing: 0.04em;
-      position: relative;
-      // No border-bottom for thead
+      position: relative; 
 
       @include mobile {
         padding: var(--spacing-md) var(--spacing-sm);
@@ -57,6 +73,8 @@
   }
 
   tbody {
+    min-height: 80%; 
+
     tr {
       background: var(--white);
       position: relative;
@@ -65,7 +83,6 @@
         background: var(--background-light);
       }
 
-      // Border line that doesn't touch edges
       &:not(:last-child)::after {
         content: '';
         position: absolute;
@@ -325,7 +342,8 @@
     padding: 0 4px;
   }
 }
-// Filter Modal Styles - Add to your existing UsersTable.scss
+
+
 .filter-modal-overlay {
   position: fixed;
   top: 0;
@@ -333,22 +351,20 @@
   right: 0;
   bottom: 0;
   background: transparent;
-  z-index: 1000;
+  z-index: 999;
 }
 
 .filter-modal {
-  position: absolute;
-  top: 100%;
-  left: 0;
+  position: fixed;
   background: var(--white);
   border-radius: var(--border-radius-lg);
   width: 270px;
   max-height: 80vh;
-  overflow-y: auto;
   box-shadow: var(--shadow-xl);
   border: 1px solid rgba(33, 63, 125, 0.06);
-  margin-top: var(--spacing-sm);
   z-index: 1001;
+  animation: filterSlideIn 0.2s ease-out;
+
 }
 
 .filter-modal-header {
@@ -526,18 +542,6 @@
   }
 }
 
-
-.table-header {
-  position: relative;
-  
-  &.filter-active {
-    .filter-modal {
-      display: block;
-    }
-  }
-}
-
-
 @keyframes filterSlideIn {
   from {
     opacity: 0;
@@ -547,8 +551,4 @@
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-.filter-modal {
-  animation: filterSlideIn 0.2s ease-out;
 }
