@@ -266,6 +266,9 @@
         }
 
         @media (max-width: 768px) {
+          .action-main {
+            flex-direction: column;
+          }
           .user-details {
             padding: 16px 20px;
           }

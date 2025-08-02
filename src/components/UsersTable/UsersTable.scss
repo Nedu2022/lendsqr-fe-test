@@ -364,7 +364,7 @@
   border: 1px solid rgba(33, 63, 125, 0.06);
   z-index: 1001;
   animation: filterSlideIn 0.2s ease-out;
-
+  overflow: scroll;
 }
 
 .filter-modal-header {

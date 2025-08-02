@@ -39,7 +39,7 @@ const UsersTable: React.FC = () => {
     const fetchUsers = async () => {
       try {
         setLoading(true);
-        const response = await fetch('https://68823e7e66a7eb81224df7e7.mockapi.io/api/v1/users');
+        const response = await fetch('http://localhost:4000/userDetails');
         
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -52,13 +52,13 @@ const UsersTable: React.FC = () => {
           id: item.id,
           organization: item.organisation || item.orgName || item.organization || 'Lendsqr',
           username: item.personal_info?.full_name || 
-            item.userName || 
-            item.username || 
+            item.name || 
+            item.name || 
             (item.profile?.firstName ? `${item.profile.firstName} ${item.profile.lastName || ''}`.trim() : item.profile?.firstName || 'User'),
           email: item.personal_info?.email || 
             item.email || 
             item.profile?.email || 
-            `user${item.id}@example.com`,
+            `${item.id}@example.com`,
           phoneNumber: item.personal_info?.phone || 
             item.profile?.phoneNumber || 
             item.phoneNumber || 
@@ -131,7 +131,7 @@ const UsersTable: React.FC = () => {
     }
 
     setFilteredUsers(filtered);
-    setCurrentPage(1); // Reset to first page when filters change
+    setCurrentPage(1); 
   }, [filters, users]);
 
   const getStatusColor = (status: string) => {
@@ -154,41 +154,39 @@ const UsersTable: React.FC = () => {
     }
   };
 
-  const handleRowClick = (user: User, globalIndex: number) => {
-    const userId = user.id || user.username || user.email || `user-${globalIndex}`;
-    navigate(`/dashboard/users/${userId}`, { state: { user } });
-  };
+const handleRowClick = (user: User) => {
+  navigate(`/dashboard/users/${user.id}`);
+};
 
   const handleActionClick = (e: React.MouseEvent, index: number) => {
     e.stopPropagation(); 
     setDropdownOpen(dropdownOpen === index ? null : index);
   };
 
-  const handleViewDetails = (e: React.MouseEvent, user: User, globalIndex: number) => {
-    e.stopPropagation();
-    const userId = user.id || user.username || user.email || `user-${globalIndex}`;
-    navigate(`/dashboard/users/${userId}`, { state: { user } });
-    setDropdownOpen(null);
-  };
+const handleViewDetails = (e: React.MouseEvent, user: User) => {
+  e.stopPropagation();
+  navigate(`/dashboard/users/${user.id}`);
+  setDropdownOpen(null);
+};
 
   const handleFilterClick = (event: React.MouseEvent) => {
     const target = event.currentTarget;
     const rect = target.getBoundingClientRect();
     
-    // Calculate position relative to viewport
-    const top = rect.bottom + 8; // 8px spacing below the button
+
+    const top = rect.bottom + 8; 
     let left = rect.left;
     
-    // Ensure modal doesn't go off screen
+ 
     const modalWidth = 270;
     const viewportWidth = window.innerWidth;
     
     if (left + modalWidth > viewportWidth - 20) {
-      left = viewportWidth - modalWidth - 20; // 20px margin from right edge
+      left = viewportWidth - modalWidth - 20; 
     }
     
     if (left < 20) {
-      left = 20; // 20px margin from left edge
+      left = 20;
     }
     
     setModalPosition({ top, left });
@@ -221,11 +219,11 @@ const UsersTable: React.FC = () => {
     setFilterModalOpen(false);
   };
 
-  // Get unique organizations and statuses for dropdowns
+
   const uniqueOrganizations = [...new Set(users.map(user => user.organization))];
   const uniqueStatuses = [...new Set(users.map(user => user.status))];
 
-  // Pagination logic
+
   const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
@@ -338,12 +336,12 @@ const UsersTable: React.FC = () => {
                 // Calculate the global index for proper identification
                 const globalIndex = startIndex + index;
                 return (
-                  <tr 
-                    key={user.id || globalIndex}
-                    className="user-row"
-                    onClick={() => handleRowClick(user, globalIndex)}
-                    style={{ cursor: 'pointer' }}
-                  >
+        <tr 
+  key={user.id}
+  className="user-row"
+  onClick={() => handleRowClick(user)}
+  style={{ cursor: 'pointer' }}
+>
                     <td data-label="Organization">{user.organization}</td>
                     <td>{user.username}</td>
                     <td>{user.email}</td>
@@ -412,7 +410,8 @@ const UsersTable: React.FC = () => {
             className="filter-modal" 
             style={{
               top: `${modalPosition.top}px`,
-              left: `${modalPosition.left}px`
+              left: `${modalPosition.left}px`,
+             
             }}
             onClick={(e) => e.stopPropagation()}
           >
