@@ -12,7 +12,7 @@ export interface User {
 export interface ExtendedUser {
   createdAt: string;
   date_joined: any;
-  phoneNumber: any;
+  phoneNumber: number;
   personal_info: any;
   profile: any;
   id: string;
