@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import LogoImg from '../../assets/Logo.svg';
 import LoginImg from '../../assets/Login.svg';
 import './Login.scss';
-import '../../styles/variables.scss'
+import '../../styles/variables.scss';
+import data from '../../../data.json';
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -10,6 +12,8 @@ const Login = () => {
     email: '',
     password: ''
   });
+
+  const navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -25,7 +29,18 @@ const Login = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('Login attempt:', formData);
+
+    const { username, password } = data.auth;
+
+    const inputEmail = formData.email.trim().toLowerCase();
+    const inputPassword = formData.password;
+
+    if (inputEmail === username.toLowerCase() && inputPassword === password) {
+      localStorage.setItem('isLoggedIn', 'true');
+      navigate('/dashboard');
+    } else {
+      alert('Invalid login credentials');
+    }
   };
 
   return (
@@ -45,6 +60,9 @@ const Login = () => {
           <div className="login-header">
             <h1 className="login-title">Welcome!</h1>
             <p className="login-subtitle">Enter details to login.</p>
+            {/* <p className="login-info">
+              <strong>Demo:</strong> admin@demo.com / admin123
+            </p> */}
           </div>
 
           <form className="login-form" onSubmit={handleSubmit}>

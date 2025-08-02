@@ -1,4 +1,9 @@
 {
+
+  "auth": {
+    "username": "admin@demo.com",
+    "password": "admin123"
+  },
   "userDetails": [
   {
     "id": "2ec48719-ab6c-4f88-9ca8-a19b5704d0ff",
