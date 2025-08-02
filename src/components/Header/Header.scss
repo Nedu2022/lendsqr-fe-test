@@ -204,17 +204,12 @@
     align-items: center !important;
 
 
-    // Hide search section completely on mobile
     .header-center {
       display: none;
     }
-
-    // Ensure proper spacing for mobile layout
     .header-left {
       gap: var(--spacing-sm);
     }
-
-    // Hide chevron icon on mobile for cleaner look
     .user {
       padding: 0;
       

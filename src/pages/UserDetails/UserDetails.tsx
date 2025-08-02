@@ -78,12 +78,8 @@ const fetchUserById = async (id: string) => {
       throw new Error(`Failed to fetch user data, status: ${response.status}`);
     }
 
-    // The API returns single user object
+
     const foundUser: ExtendedUser = await response.json();
-
-    // If your API returns differently (like an array), handle accordingly
-
-    // If needed, transform here to ensure all fields match your interface
     const transformedUser: ExtendedUser = {
       id: foundUser.id,
       name: foundUser.name,

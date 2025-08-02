@@ -31,7 +31,6 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, isMobile, onClose }) => {
   return (
     <>
-      {/* Overlay for mobile */}
       {isMobile && (
         <div
           className={`sidebar-overlay ${isOpen ? 'show' : ''}`}

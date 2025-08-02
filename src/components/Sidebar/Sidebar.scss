@@ -1,7 +1,7 @@
 @use '../../styles/variables' as *;
 @use '../../styles/mixins' as *;
 
-/* Mobile overlay */
+
 .sidebar-overlay {
   position: fixed;
   top: 0;
@@ -20,7 +20,7 @@
   }
 }
 
-/* Main sidebar */
+
 .sidebar {
   width: 283px;
   background: var(--background-light);
@@ -31,12 +31,12 @@
   height: 100%;
   overflow-y: auto;
   
-  /* Desktop styles */
+
   position: relative;
   z-index: 10;
   transition: none;
 
-  /* Mobile styles */
+
   &.mobile {
     position: fixed;
     top: 0;
@@ -144,7 +144,7 @@
 
 @media (max-width: 767px) {
   .sidebar.mobile {
-    width: 280px; /* Slightly smaller on mobile */
+    width: 280px; 
   }
 
   .nav-item {

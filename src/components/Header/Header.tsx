@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Search, ChevronDown, Menu, X } from 'lucide-react';
+import React from 'react';
+import { Search, ChevronDown, } from 'lucide-react';
 import Logo from '../../assets/Logo.svg';
 import Adedeji from '../../assets/adedeji.svg';
 import notification from '../../assets/notification.svg';
@@ -11,12 +11,9 @@ interface HeaderProps {
   isMobile?: boolean;
 }
 
-const Header: React.FC<HeaderProps> = ({ title = "Dashboard", onMenuClick, isMobile = false }) => {
-  const [showMobileSearch, setShowMobileSearch] = useState(false);
+const Header: React.FC<HeaderProps> = () => {
 
-  const toggleMobileSearch = () => {
-    setShowMobileSearch(!showMobileSearch);
-  };
+
 
   return (
     <>

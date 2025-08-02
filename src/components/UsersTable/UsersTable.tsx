@@ -1,9 +1,17 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { MoreVertical, Eye, UserX, UserCheck, Calendar, X, Loader } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import type { User } from '../../types/index';
-import filter from '../../assets/filter-results-button.svg'
-import './UsersTable.scss';
+import React, { useState, useEffect, useRef } from "react";
+import {
+  MoreVertical,
+  Eye,
+  UserX,
+  UserCheck,
+  Calendar,
+  X,
+  Loader
+} from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import type { User } from "../../types/index";
+import filter from "../../assets/filter-results-button.svg";
+import "./UsersTable.scss";
 
 interface FilterState {
   organization: string;
@@ -26,66 +34,82 @@ const UsersTable: React.FC = () => {
   const [itemsPerPage, setItemsPerPage] = useState(100);
   const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
   const [filters, setFilters] = useState<FilterState>({
-    organization: '',
-    username: '',
-    email: '',
-    date: '',
-    phoneNumber: '',
-    status: ''
+    organization: "",
+    username: "",
+    email: "",
+    date: "",
+    phoneNumber: "",
+    status: ""
   });
 
-  // Fetch users from API
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         setLoading(true);
-        const response = await fetch('http://localhost:4000/userDetails');
-        
+        const response = await fetch("http://localhost:4000/userDetails");
+
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
+
         const data = await response.json();
-        
-        // Transform the API data to match User interface
+
         const transformedUsers: User[] = data.map((item: any) => ({
           id: item.id,
-          organization: item.organisation || item.orgName || item.organization || 'Lendsqr',
-          username: item.personal_info?.full_name || 
-            item.name || 
-            item.name || 
-            (item.profile?.firstName ? `${item.profile.firstName} ${item.profile.lastName || ''}`.trim() : item.profile?.firstName || 'User'),
-          email: item.personal_info?.email || 
-            item.email || 
-            item.profile?.email || 
+          organization:
+            item.organisation || item.orgName || item.organization || "Lendsqr",
+          username:
+            item.personal_info?.full_name ||
+            item.name ||
+            item.name ||
+            (item.profile?.firstName
+              ? `${item.profile.firstName} ${
+                  item.profile.lastName || ""
+                }`.trim()
+              : item.profile?.firstName || "User"),
+          email:
+            item.personal_info?.email ||
+            item.email ||
+            item.profile?.email ||
             `${item.id}@example.com`,
-          phoneNumber: item.personal_info?.phone || 
-            item.profile?.phoneNumber || 
-            item.phoneNumber || 
-            item.phone || 
+          phoneNumber:
+            item.personal_info?.phone ||
+            item.profile?.phoneNumber ||
+            item.phoneNumber ||
+            item.phone ||
             `+234${Math.floor(Math.random() * 9000000000 + 1000000000)}`,
-          dateJoined: item.date_joined ? new Date(parseInt(item.date_joined)).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric'
-          }) : item.createdAt ? new Date(item.createdAt).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric'
-          }) : new Date().toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric'
-          }),
-          status: item.status ? 
-            (item.status.charAt(0).toUpperCase() + item.status.slice(1)) as 'Active' | 'Inactive' | 'Pending' | 'Blacklisted' :
-            ['Active', 'Inactive', 'Pending', 'Blacklisted'][Math.floor(Math.random() * 4)] as 'Active' | 'Inactive' | 'Pending' | 'Blacklisted'
+          dateJoined: item.date_joined
+            ? new Date(parseInt(item.date_joined)).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "short",
+                day: "numeric"
+              })
+            : item.createdAt
+            ? new Date(item.createdAt).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "short",
+                day: "numeric"
+              })
+            : new Date().toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "short",
+                day: "numeric"
+              }),
+          status: item.status
+            ? ((item.status.charAt(0).toUpperCase() + item.status.slice(1)) as
+                | "Active"
+                | "Inactive"
+                | "Pending"
+                | "Blacklisted")
+            : (["Active", "Inactive", "Pending", "Blacklisted"][
+                Math.floor(Math.random() * 4)
+              ] as "Active" | "Inactive" | "Pending" | "Blacklisted")
         }));
-        
+
         setUsers(transformedUsers);
         setFilteredUsers(transformedUsers);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to fetch users');
+        setError(err instanceof Error ? err.message : "Failed to fetch users");
       } finally {
         setLoading(false);
       }
@@ -99,102 +123,112 @@ const UsersTable: React.FC = () => {
     let filtered = users;
 
     if (filters.organization) {
-      filtered = filtered.filter(user => 
-        user.organization.toLowerCase().includes(filters.organization.toLowerCase())
+      filtered = filtered.filter((user) =>
+        user.organization
+          .toLowerCase()
+          .includes(filters.organization.toLowerCase())
       );
     }
 
     if (filters.username) {
-      filtered = filtered.filter(user => 
+      filtered = filtered.filter((user) =>
         user.username.toLowerCase().includes(filters.username.toLowerCase())
       );
     }
 
     if (filters.email) {
-      filtered = filtered.filter(user => 
+      filtered = filtered.filter((user) =>
         user.email.toLowerCase().includes(filters.email.toLowerCase())
       );
     }
 
     if (filters.phoneNumber) {
-      filtered = filtered.filter(user => 
+      filtered = filtered.filter((user) =>
         user.phoneNumber.includes(filters.phoneNumber)
       );
     }
 
     if (filters.status) {
-      filtered = filtered.filter(user => user.status === filters.status);
+      filtered = filtered.filter((user) => user.status === filters.status);
     }
 
     if (filters.date) {
-      filtered = filtered.filter(user => user.dateJoined === filters.date);
+      filtered = filtered.filter((user) => user.dateJoined === filters.date);
     }
 
     setFilteredUsers(filtered);
-    setCurrentPage(1); 
+    setCurrentPage(1);
   }, [filters, users]);
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'Active': return '#39CD62';
-      case 'Inactive': return '#545F7D';
-      case 'Pending': return '#E9B200';
-      case 'Blacklisted': return '#E4033B';
-      default: return '#545F7D';
+      case "Active":
+        return "#39CD62";
+      case "Inactive":
+        return "#545F7D";
+      case "Pending":
+        return "#E9B200";
+      case "Blacklisted":
+        return "#E4033B";
+      default:
+        return "#545F7D";
     }
   };
 
   const getStatusBg = (status: string) => {
     switch (status) {
-      case 'Active': return 'rgba(57, 205, 98, 0.06)';
-      case 'Inactive': return 'rgba(84, 95, 125, 0.06)';
-      case 'Pending': return 'rgba(233, 178, 0, 0.06)';
-      case 'Blacklisted': return 'rgba(228, 3, 59, 0.06)';
-      default: return 'rgba(84, 95, 125, 0.06)';
+      case "Active":
+        return "rgba(57, 205, 98, 0.06)";
+      case "Inactive":
+        return "rgba(84, 95, 125, 0.06)";
+      case "Pending":
+        return "rgba(233, 178, 0, 0.06)";
+      case "Blacklisted":
+        return "rgba(228, 3, 59, 0.06)";
+      default:
+        return "rgba(84, 95, 125, 0.06)";
     }
   };
 
-const handleRowClick = (user: User) => {
-  navigate(`/dashboard/users/${user.id}`);
-};
+  const handleRowClick = (user: User) => {
+    navigate(`/dashboard/users/${user.id}`);
+  };
 
   const handleActionClick = (e: React.MouseEvent, index: number) => {
-    e.stopPropagation(); 
+    e.stopPropagation();
     setDropdownOpen(dropdownOpen === index ? null : index);
   };
 
-const handleViewDetails = (e: React.MouseEvent, user: User) => {
-  e.stopPropagation();
-  navigate(`/dashboard/users/${user.id}`);
-  setDropdownOpen(null);
-};
+  const handleViewDetails = (e: React.MouseEvent, user: User) => {
+    e.stopPropagation();
+    navigate(`/dashboard/users/${user.id}`);
+    setDropdownOpen(null);
+  };
 
   const handleFilterClick = (event: React.MouseEvent) => {
     const target = event.currentTarget;
     const rect = target.getBoundingClientRect();
-    
 
-    const top = rect.bottom + 8; 
+    const top = rect.bottom + 8;
     let left = rect.left;
-    
- 
+
     const modalWidth = 270;
     const viewportWidth = window.innerWidth;
-    
+
     if (left + modalWidth > viewportWidth - 20) {
-      left = viewportWidth - modalWidth - 20; 
+      left = viewportWidth - modalWidth - 20;
     }
-    
+
     if (left < 20) {
       left = 20;
     }
-    
+
     setModalPosition({ top, left });
     setFilterModalOpen(true);
   };
 
   const handleFilterChange = (field: keyof FilterState, value: string) => {
-    setFilters(prev => ({
+    setFilters((prev) => ({
       ...prev,
       [field]: value
     }));
@@ -202,12 +236,12 @@ const handleViewDetails = (e: React.MouseEvent, user: User) => {
 
   const handleReset = () => {
     setFilters({
-      organization: '',
-      username: '',
-      email: '',
-      date: '',
-      phoneNumber: '',
-      status: ''
+      organization: "",
+      username: "",
+      email: "",
+      date: "",
+      phoneNumber: "",
+      status: ""
     });
   };
 
@@ -219,10 +253,10 @@ const handleViewDetails = (e: React.MouseEvent, user: User) => {
     setFilterModalOpen(false);
   };
 
-
-  const uniqueOrganizations = [...new Set(users.map(user => user.organization))];
-  const uniqueStatuses = [...new Set(users.map(user => user.status))];
-
+  const uniqueOrganizations = [
+    ...new Set(users.map((user) => user.organization))
+  ];
+  const uniqueStatuses = [...new Set(users.map((user) => user.status))];
 
   const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -265,66 +299,66 @@ const handleViewDetails = (e: React.MouseEvent, user: User) => {
                 <th>
                   <div className="table-header">
                     Organization
-                    <img 
-                      src={filter} 
-                      alt="Filter" 
+                    <img
+                      src={filter}
+                      alt="Filter"
                       onClick={handleFilterClick}
-                      style={{ cursor: 'pointer' }}
+                      style={{ cursor: "pointer" }}
                     />
                   </div>
                 </th>
                 <th>
                   <div className="table-header">
                     Username
-                    <img 
-                      src={filter} 
-                      alt="Filter" 
+                    <img
+                      src={filter}
+                      alt="Filter"
                       onClick={handleFilterClick}
-                      style={{ cursor: 'pointer' }}
+                      style={{ cursor: "pointer" }}
                     />
                   </div>
                 </th>
                 <th>
                   <div className="table-header">
                     Email
-                    <img 
-                      src={filter} 
-                      alt="Filter" 
+                    <img
+                      src={filter}
+                      alt="Filter"
                       onClick={handleFilterClick}
-                      style={{ cursor: 'pointer' }}
+                      style={{ cursor: "pointer" }}
                     />
                   </div>
                 </th>
                 <th>
                   <div className="table-header">
                     Phone Number
-                    <img 
-                      src={filter} 
-                      alt="Filter" 
+                    <img
+                      src={filter}
+                      alt="Filter"
                       onClick={handleFilterClick}
-                      style={{ cursor: 'pointer' }}
+                      style={{ cursor: "pointer" }}
                     />
                   </div>
                 </th>
                 <th>
                   <div className="table-header">
                     Date Joined
-                    <img 
-                      src={filter} 
-                      alt="Filter" 
+                    <img
+                      src={filter}
+                      alt="Filter"
                       onClick={handleFilterClick}
-                      style={{ cursor: 'pointer' }}
+                      style={{ cursor: "pointer" }}
                     />
                   </div>
                 </th>
                 <th>
                   <div className="table-header">
                     Status
-                    <img 
-                      src={filter} 
-                      alt="Filter" 
+                    <img
+                      src={filter}
+                      alt="Filter"
                       onClick={handleFilterClick}
-                      style={{ cursor: 'pointer' }}
+                      style={{ cursor: "pointer" }}
                     />
                   </div>
                 </th>
@@ -333,15 +367,14 @@ const handleViewDetails = (e: React.MouseEvent, user: User) => {
             </thead>
             <tbody>
               {currentUsers.map((user, index) => {
-                // Calculate the global index for proper identification
                 const globalIndex = startIndex + index;
                 return (
-        <tr 
-  key={user.id}
-  className="user-row"
-  onClick={() => handleRowClick(user)}
-  style={{ cursor: 'pointer' }}
->
+                  <tr
+                    key={user.id}
+                    className="user-row"
+                    onClick={() => handleRowClick(user)}
+                    style={{ cursor: "pointer" }}
+                  >
                     <td data-label="Organization">{user.organization}</td>
                     <td>{user.username}</td>
                     <td>{user.email}</td>
@@ -369,21 +402,23 @@ const handleViewDetails = (e: React.MouseEvent, user: User) => {
                         </button>
                         {dropdownOpen === index && (
                           <div className="dropdown-menu">
-                            <button 
+                            <button
                               className="dropdown-item"
-                              onClick={(e) => handleViewDetails(e, user, globalIndex)}
+                              onClick={(e) =>
+                                handleViewDetails(e, user, globalIndex)
+                              }
                             >
                               <Eye size={16} />
                               View Details
                             </button>
-                            <button 
+                            <button
                               className="dropdown-item"
                               onClick={(e) => e.stopPropagation()}
                             >
                               <UserX size={16} />
                               Blacklist User
                             </button>
-                            <button 
+                            <button
                               className="dropdown-item"
                               onClick={(e) => e.stopPropagation()}
                             >
@@ -402,22 +437,20 @@ const handleViewDetails = (e: React.MouseEvent, user: User) => {
         </div>
       </div>
 
-      {/* Filter Modal - Now positioned outside the table */}
       {filterModalOpen && (
         <>
           <div className="filter-modal-overlay" onClick={handleModalClose} />
-          <div 
-            className="filter-modal" 
+          <div
+            className="filter-modal"
             style={{
               top: `${modalPosition.top}px`,
-              left: `${modalPosition.left}px`,
-             
+              left: `${modalPosition.left}px`
             }}
             onClick={(e) => e.stopPropagation()}
           >
             <div className="filter-modal-header">
               <h3>Filter</h3>
-              <button 
+              <button
                 className="filter-modal-close"
                 onClick={handleModalClose}
                 aria-label="Close modal"
@@ -433,11 +466,15 @@ const handleViewDetails = (e: React.MouseEvent, user: User) => {
                   id="organization"
                   className="filter-select"
                   value={filters.organization}
-                  onChange={(e) => handleFilterChange('organization', e.target.value)}
+                  onChange={(e) =>
+                    handleFilterChange("organization", e.target.value)
+                  }
                 >
                   <option value="">Select</option>
-                  {uniqueOrganizations.map(org => (
-                    <option key={org} value={org}>{org}</option>
+                  {uniqueOrganizations.map((org) => (
+                    <option key={org} value={org}>
+                      {org}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -450,7 +487,9 @@ const handleViewDetails = (e: React.MouseEvent, user: User) => {
                   className="filter-input"
                   placeholder="User"
                   value={filters.username}
-                  onChange={(e) => handleFilterChange('username', e.target.value)}
+                  onChange={(e) =>
+                    handleFilterChange("username", e.target.value)
+                  }
                 />
               </div>
 
@@ -462,7 +501,7 @@ const handleViewDetails = (e: React.MouseEvent, user: User) => {
                   className="filter-input"
                   placeholder="Email"
                   value={filters.email}
-                  onChange={(e) => handleFilterChange('email', e.target.value)}
+                  onChange={(e) => handleFilterChange("email", e.target.value)}
                 />
               </div>
 
@@ -475,7 +514,7 @@ const handleViewDetails = (e: React.MouseEvent, user: User) => {
                     className="filter-input date-input"
                     placeholder="Date"
                     value={filters.date}
-                    onChange={(e) => handleFilterChange('date', e.target.value)}
+                    onChange={(e) => handleFilterChange("date", e.target.value)}
                   />
                   <Calendar className="date-icon" size={16} />
                 </div>
@@ -489,7 +528,9 @@ const handleViewDetails = (e: React.MouseEvent, user: User) => {
                   className="filter-input"
                   placeholder="Phone Number"
                   value={filters.phoneNumber}
-                  onChange={(e) => handleFilterChange('phoneNumber', e.target.value)}
+                  onChange={(e) =>
+                    handleFilterChange("phoneNumber", e.target.value)
+                  }
                 />
               </div>
 
@@ -499,24 +540,26 @@ const handleViewDetails = (e: React.MouseEvent, user: User) => {
                   id="status"
                   className="filter-select"
                   value={filters.status}
-                  onChange={(e) => handleFilterChange('status', e.target.value)}
+                  onChange={(e) => handleFilterChange("status", e.target.value)}
                 >
                   <option value="">Select</option>
-                  {uniqueStatuses.map(status => (
-                    <option key={status} value={status}>{status}</option>
+                  {uniqueStatuses.map((status) => (
+                    <option key={status} value={status}>
+                      {status}
+                    </option>
                   ))}
                 </select>
               </div>
             </div>
 
             <div className="filter-modal-footer">
-              <button 
+              <button
                 className="filter-btn filter-btn-reset"
                 onClick={handleReset}
               >
                 Reset
               </button>
-              <button 
+              <button
                 className="filter-btn filter-btn-apply"
                 onClick={handleFilter}
               >
@@ -529,9 +572,10 @@ const handleViewDetails = (e: React.MouseEvent, user: User) => {
 
       <div className="pagination">
         <div className="pagination-info">
-          Showing {startIndex + 1} to {Math.min(endIndex, filteredUsers.length)} of
-          <select 
-            className="pagination-select" 
+          Showing {startIndex + 1} to {Math.min(endIndex, filteredUsers.length)}{" "}
+          of
+          <select
+            className="pagination-select"
             aria-label="Items per page"
             value={itemsPerPage}
             onChange={(e) => handleItemsPerPageChange(Number(e.target.value))}
@@ -545,7 +589,7 @@ const handleViewDetails = (e: React.MouseEvent, user: User) => {
         </div>
 
         <div className="pagination-controls">
-          <button 
+          <button
             className="pagination-btn"
             onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
             disabled={currentPage === 1}
@@ -553,35 +597,38 @@ const handleViewDetails = (e: React.MouseEvent, user: User) => {
           >
             ‹
           </button>
-          
-          {/* Show page numbers */}
-          {totalPages > 0 && Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-            let pageNum;
-            if (totalPages <= 5) {
-              pageNum = i + 1;
-            } else if (currentPage <= 3) {
-              pageNum = i + 1;
-            } else if (currentPage >= totalPages - 2) {
-              pageNum = totalPages - 4 + i;
-            } else {
-              pageNum = currentPage - 2 + i;
-            }
-            
-            return (
-              <button
-                key={pageNum}
-                className={`pagination-btn ${currentPage === pageNum ? 'active' : ''}`}
-                onClick={() => handlePageChange(pageNum)}
-              >
-                {pageNum}
-              </button>
-            );
-          })}
-          
+
+        
+          {totalPages > 0 &&
+            Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+              let pageNum;
+              if (totalPages <= 5) {
+                pageNum = i + 1;
+              } else if (currentPage <= 3) {
+                pageNum = i + 1;
+              } else if (currentPage >= totalPages - 2) {
+                pageNum = totalPages - 4 + i;
+              } else {
+                pageNum = currentPage - 2 + i;
+              }
+
+              return (
+                <button
+                  key={pageNum}
+                  className={`pagination-btn ${
+                    currentPage === pageNum ? "active" : ""
+                  }`}
+                  onClick={() => handlePageChange(pageNum)}
+                >
+                  {pageNum}
+                </button>
+              );
+            })}
+
           {totalPages > 5 && currentPage < totalPages - 2 && (
             <>
               <span className="pagination-ellipsis">...</span>
-              <button 
+              <button
                 className="pagination-btn"
                 onClick={() => handlePageChange(totalPages)}
               >
@@ -589,12 +636,16 @@ const handleViewDetails = (e: React.MouseEvent, user: User) => {
               </button>
             </>
           )}
-          
-          <button 
+
+          <button
             className="pagination-btn"
-            onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
+            onClick={() =>
+              handlePageChange(Math.min(totalPages, currentPage + 1))
+            }
             disabled={currentPage === totalPages || totalPages === 0}
-            style={{ opacity: (currentPage === totalPages || totalPages === 0) ? 0.5 : 1 }}
+            style={{
+              opacity: currentPage === totalPages || totalPages === 0 ? 0.5 : 1
+            }}
           >
             ›
           </button>
