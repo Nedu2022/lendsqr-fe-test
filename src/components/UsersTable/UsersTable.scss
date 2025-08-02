@@ -355,7 +355,6 @@
 }
 
 .filter-modal {
-  position: fixed;
   background: var(--white);
   border-radius: var(--border-radius-lg);
   width: 270px;
@@ -365,6 +364,9 @@
   z-index: 1001;
   animation: filterSlideIn 0.2s ease-out;
   overflow: scroll;
+  top: var(--top);
+  left: var(--left);
+  z-index: 1000;
 }
 
 .filter-modal-header {
@@ -514,7 +516,7 @@
   }
 }
 
-// Responsive design
+
 @include mobile {
   .filter-modal {
     width: 250px;
@@ -551,4 +553,67 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* Cursor on filter icons */
+.clickable-icon {
+  cursor: pointer;
+}
+
+/* Cursor on rows */
+.clickable-row {
+  cursor: pointer;
+}
+
+/* Status badges */
+.status-badge {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-weight: 500;
+  font-size: 0.875rem;
+  text-align: center;
+  display: inline-block;
+
+  &--active {
+    color: #39CD62;
+    background-color: rgba(57, 205, 98, 0.06);
+  }
+
+  &--inactive {
+    color: #545F7D;
+    background-color: rgba(84, 95, 125, 0.06);
+  }
+
+  &--pending {
+    color: #E9B200;
+    background-color: rgba(233, 178, 0, 0.06);
+  }
+
+  &--blacklisted {
+    color: #E4033B;
+    background-color: rgba(228, 3, 59, 0.06);
+  }
+}
+
+.filter-modal {
+  position: absolute;
+  z-index: 1000;
+}
+
+
+.pagination-btn {
+  &.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+}
+
+.pagination-ellipsis {
+  padding: 0 0.5rem;
+}
+
+.pagination-btn.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+  cursor: not-allowed;
 }

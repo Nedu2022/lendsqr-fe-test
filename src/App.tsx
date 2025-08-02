@@ -2,7 +2,6 @@ import { Routes, Route } from 'react-router-dom';
 import Login from './pages/Login/Login';
 import Dashboard from './pages/Dashboard/Dashboard';
 import UserDetails from './pages/UserDetails/UserDetails';
-import './styles/App.module.scss';
 import './styles/variables.scss';
 
 const App: React.FC = () => {

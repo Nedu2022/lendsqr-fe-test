@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import {
   MoreVertical,
   Eye,
@@ -9,7 +9,7 @@ import {
   Loader
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import type { User } from "../../types/index";
+import type { ExtendedUser, User } from "../../types/index";
 import filter from "../../assets/filter-results-button.svg";
 import "./UsersTable.scss";
 
@@ -54,7 +54,7 @@ const UsersTable: React.FC = () => {
 
         const data = await response.json();
 
-        const transformedUsers: User[] = data.map((item: any) => ({
+const transformedUsers: User[] = (data as ExtendedUser[]).map((item) => ({
           id: item.id,
           organization:
             item.organisation || item.orgName || item.organization || "Lendsqr",
@@ -160,35 +160,8 @@ const UsersTable: React.FC = () => {
     setCurrentPage(1);
   }, [filters, users]);
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "Active":
-        return "#39CD62";
-      case "Inactive":
-        return "#545F7D";
-      case "Pending":
-        return "#E9B200";
-      case "Blacklisted":
-        return "#E4033B";
-      default:
-        return "#545F7D";
-    }
-  };
 
-  const getStatusBg = (status: string) => {
-    switch (status) {
-      case "Active":
-        return "rgba(57, 205, 98, 0.06)";
-      case "Inactive":
-        return "rgba(84, 95, 125, 0.06)";
-      case "Pending":
-        return "rgba(233, 178, 0, 0.06)";
-      case "Blacklisted":
-        return "rgba(228, 3, 59, 0.06)";
-      default:
-        return "rgba(84, 95, 125, 0.06)";
-    }
-  };
+
 
   const handleRowClick = (user: User) => {
     navigate(`/dashboard/users/${user.id}`);
@@ -269,7 +242,7 @@ const UsersTable: React.FC = () => {
 
   const handleItemsPerPageChange = (items: number) => {
     setItemsPerPage(items);
-    setCurrentPage(1); // Reset to first page
+    setCurrentPage(1); 
   };
 
   if (loading) {
@@ -299,67 +272,73 @@ const UsersTable: React.FC = () => {
                 <th>
                   <div className="table-header">
                     Organization
-                    <img
-                      src={filter}
-                      alt="Filter"
-                      onClick={handleFilterClick}
-                      style={{ cursor: "pointer" }}
-                    />
+              <img
+  src={filter}
+  alt="Filter"
+  className="clickable-icon"
+  onClick={handleFilterClick}
+/>
+
                   </div>
                 </th>
                 <th>
                   <div className="table-header">
                     Username
-                    <img
-                      src={filter}
-                      alt="Filter"
-                      onClick={handleFilterClick}
-                      style={{ cursor: "pointer" }}
-                    />
+           <img
+  src={filter}
+  alt="Filter"
+  className="clickable-icon"
+  onClick={handleFilterClick}
+/>
+
                   </div>
                 </th>
                 <th>
                   <div className="table-header">
                     Email
-                    <img
-                      src={filter}
-                      alt="Filter"
-                      onClick={handleFilterClick}
-                      style={{ cursor: "pointer" }}
-                    />
+               <img
+  src={filter}
+  alt="Filter"
+  className="clickable-icon"
+  onClick={handleFilterClick}
+/>
+
                   </div>
                 </th>
                 <th>
                   <div className="table-header">
                     Phone Number
-                    <img
-                      src={filter}
-                      alt="Filter"
-                      onClick={handleFilterClick}
-                      style={{ cursor: "pointer" }}
-                    />
+                <img
+  src={filter}
+  alt="Filter"
+  className="clickable-icon"
+  onClick={handleFilterClick}
+/>
+
                   </div>
                 </th>
                 <th>
                   <div className="table-header">
                     Date Joined
-                    <img
-                      src={filter}
-                      alt="Filter"
-                      onClick={handleFilterClick}
-                      style={{ cursor: "pointer" }}
-                    />
+               <img
+  src={filter}
+  alt="Filter"
+  className="clickable-icon"
+  onClick={handleFilterClick}
+/>
+
                   </div>
                 </th>
                 <th>
                   <div className="table-header">
                     Status
-                    <img
-                      src={filter}
-                      alt="Filter"
-                      onClick={handleFilterClick}
-                      style={{ cursor: "pointer" }}
-                    />
+                <img
+  src={filter}
+  alt="Filter"
+  className="clickable-icon"
+  onClick={handleFilterClick}
+/>
+
                   </div>
                 </th>
                 <th></th>
@@ -369,27 +348,22 @@ const UsersTable: React.FC = () => {
               {currentUsers.map((user, index) => {
                 const globalIndex = startIndex + index;
                 return (
-                  <tr
-                    key={user.id}
-                    className="user-row"
-                    onClick={() => handleRowClick(user)}
-                    style={{ cursor: "pointer" }}
-                  >
+               <tr
+  key={user.id}
+  className="user-row clickable-row"
+  onClick={() => handleRowClick(user)}
+>
+
                     <td data-label="Organization">{user.organization}</td>
                     <td>{user.username}</td>
                     <td>{user.email}</td>
                     <td>{user.phoneNumber}</td>
                     <td>{user.dateJoined}</td>
                     <td>
-                      <span
-                        className="status-badge"
-                        style={{
-                          color: getStatusColor(user.status),
-                          backgroundColor: getStatusBg(user.status)
-                        }}
-                      >
-                        {user.status}
-                      </span>
+                  <span className={`status-badge status-badge--${user.status.toLowerCase()}`}>
+  {user.status}
+</span>
+
                     </td>
                     <td>
                       <div className="action-menu">
@@ -440,14 +414,15 @@ const UsersTable: React.FC = () => {
       {filterModalOpen && (
         <>
           <div className="filter-modal-overlay" onClick={handleModalClose} />
-          <div
-            className="filter-modal"
-            style={{
-              top: `${modalPosition.top}px`,
-              left: `${modalPosition.left}px`
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
+  <div
+  className="filter-modal"
+  style={{
+    '--top': `${modalPosition.top}px`,
+    '--left': `${modalPosition.left}px`
+  } as React.CSSProperties}
+  onClick={(e) => e.stopPropagation()}
+>
+
             <div className="filter-modal-header">
               <h3>Filter</h3>
               <button
@@ -637,18 +612,18 @@ const UsersTable: React.FC = () => {
             </>
           )}
 
-          <button
-            className="pagination-btn"
-            onClick={() =>
-              handlePageChange(Math.min(totalPages, currentPage + 1))
-            }
-            disabled={currentPage === totalPages || totalPages === 0}
-            style={{
-              opacity: currentPage === totalPages || totalPages === 0 ? 0.5 : 1
-            }}
-          >
-            ›
-          </button>
+<button
+  className={`pagination-btn ${
+    currentPage === totalPages || totalPages === 0 ? "disabled" : ""
+  }`}
+  onClick={() =>
+    handlePageChange(Math.min(totalPages, currentPage + 1))
+  }
+  disabled={currentPage === totalPages || totalPages === 0}
+>
+  ›
+</button>
+
         </div>
       </div>
     </>
