@@ -9,7 +9,7 @@ import {
   Loader
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import type { ExtendedUser, User } from "../../types/index";
+import type { ExtendedUser, User, } from "../../types/index";
 import filter from "../../assets/filter-results-button.svg";
 import "./UsersTable.scss";
 
@@ -54,57 +54,63 @@ const UsersTable: React.FC = () => {
 
         const data = await response.json();
 
-const transformedUsers: User[] = (data as ExtendedUser[]).map((item) => ({
-          id: item.id,
-          organization:
-            item.organisation || item.orgName || item.organization || "Lendsqr",
-          username:
-            item.personal_info?.full_name ||
-            item.name ||
-            item.name ||
-            (item.profile?.firstName
-              ? `${item.profile.firstName} ${
-                  item.profile.lastName || ""
-                }`.trim()
-              : item.profile?.firstName || "User"),
-          email:
-            item.personal_info?.email ||
-            item.email ||
-            item.profile?.email ||
-            `${item.id}@example.com`,
-          phoneNumber:
-            item.personal_info?.phone ||
-            item.profile?.phoneNumber ||
-            item.phoneNumber ||
-            item.phone ||
-            `+234${Math.floor(Math.random() * 9000000000 + 1000000000)}`,
-          dateJoined: item.date_joined
-            ? new Date(parseInt(item.date_joined)).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "short",
-                day: "numeric"
-              })
-            : item.createdAt
-            ? new Date(item.createdAt).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "short",
-                day: "numeric"
-              })
-            : new Date().toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "short",
-                day: "numeric"
-              }),
-          status: item.status
-            ? ((item.status.charAt(0).toUpperCase() + item.status.slice(1)) as
-                | "Active"
-                | "Inactive"
-                | "Pending"
-                | "Blacklisted")
-            : (["Active", "Inactive", "Pending", "Blacklisted"][
-                Math.floor(Math.random() * 4)
-              ] as "Active" | "Inactive" | "Pending" | "Blacklisted")
-        }));
+        const transformedUsers: User[] = (data as ExtendedUser[]).map(
+          (item) => ({
+            id: item.id,
+            organization:
+              item.organization,
+            username:
+              item.personal_info?.full_name ||
+              item.name ||
+              item.name ||
+              (item.profile?.firstName
+                ? `${item.profile.firstName} ${
+                    item.profile.lastName || ""
+                  }`.trim()
+                : item.profile?.firstName || "User"),
+            email:
+              item.personal_info?.email ||
+              item.email ||
+              item.profile?.email ||
+              `${item.id}@example.com`,
+            phoneNumber:
+              item.personal_info?.phone ||
+              item.profile?.phoneNumber ||
+              item.phoneNumber ||
+              item.phone ||
+              `+234${Math.floor(Math.random() * 9000000000 + 1000000000)}`,
+            dateJoined: item.date_joined
+              ? new Date(parseInt(item.date_joined)).toLocaleDateString(
+                  "en-US",
+                  {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric"
+                  }
+                )
+              : item.createdAt
+              ? new Date(item.createdAt).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric"
+                })
+              : new Date().toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric"
+                }),
+            status: item.status
+              ? ((item.status.charAt(0).toUpperCase() +
+                  item.status.slice(1)) as
+                  | "Active"
+                  | "Inactive"
+                  | "Pending"
+                  | "Blacklisted")
+              : (["Active", "Inactive", "Pending", "Blacklisted"][
+                  Math.floor(Math.random() * 4)
+                ] as "Active" | "Inactive" | "Pending" | "Blacklisted")
+          })
+        );
 
         setUsers(transformedUsers);
         setFilteredUsers(transformedUsers);
@@ -159,9 +165,6 @@ const transformedUsers: User[] = (data as ExtendedUser[]).map((item) => ({
     setFilteredUsers(filtered);
     setCurrentPage(1);
   }, [filters, users]);
-
-
-
 
   const handleRowClick = (user: User) => {
     navigate(`/dashboard/users/${user.id}`);
@@ -242,7 +245,7 @@ const transformedUsers: User[] = (data as ExtendedUser[]).map((item) => ({
 
   const handleItemsPerPageChange = (items: number) => {
     setItemsPerPage(items);
-    setCurrentPage(1); 
+    setCurrentPage(1);
   };
 
   if (loading) {
@@ -272,73 +275,67 @@ const transformedUsers: User[] = (data as ExtendedUser[]).map((item) => ({
                 <th>
                   <div className="table-header">
                     Organization
-              <img
-  src={filter}
-  alt="Filter"
-  className="clickable-icon"
-  onClick={handleFilterClick}
-/>
-
+                    <img
+                      src={filter}
+                      alt="Filter"
+                      className="clickable-icon"
+                      onClick={handleFilterClick}
+                    />
                   </div>
                 </th>
                 <th>
                   <div className="table-header">
                     Username
-           <img
-  src={filter}
-  alt="Filter"
-  className="clickable-icon"
-  onClick={handleFilterClick}
-/>
-
+                    <img
+                      src={filter}
+                      alt="Filter"
+                      className="clickable-icon"
+                      onClick={handleFilterClick}
+                    />
                   </div>
                 </th>
                 <th>
                   <div className="table-header">
                     Email
-               <img
-  src={filter}
-  alt="Filter"
-  className="clickable-icon"
-  onClick={handleFilterClick}
-/>
-
+                    <img
+                      src={filter}
+                      alt="Filter"
+                      className="clickable-icon"
+                      onClick={handleFilterClick}
+                    />
                   </div>
                 </th>
                 <th>
                   <div className="table-header">
                     Phone Number
-                <img
-  src={filter}
-  alt="Filter"
-  className="clickable-icon"
-  onClick={handleFilterClick}
-/>
-
+                    <img
+                      src={filter}
+                      alt="Filter"
+                      className="clickable-icon"
+                      onClick={handleFilterClick}
+                    />
                   </div>
                 </th>
                 <th>
                   <div className="table-header">
                     Date Joined
-               <img
-  src={filter}
-  alt="Filter"
-  className="clickable-icon"
-  onClick={handleFilterClick}
-/>
-
+                    <img
+                      src={filter}
+                      alt="Filter"
+                      className="clickable-icon"
+                      onClick={handleFilterClick}
+                    />
                   </div>
                 </th>
                 <th>
                   <div className="table-header">
                     Status
-                <img
-  src={filter}
-  alt="Filter"
-  className="clickable-icon"
-  onClick={handleFilterClick}
-/>
-
+                    <img
+                      src={filter}
+                      alt="Filter"
+                      className="clickable-icon"
+                      onClick={handleFilterClick}
+                    />
                   </div>
                 </th>
                 <th></th>
@@ -346,24 +343,23 @@ const transformedUsers: User[] = (data as ExtendedUser[]).map((item) => ({
             </thead>
             <tbody>
               {currentUsers.map((user, index) => {
-                const globalIndex = startIndex + index;
                 return (
-               <tr
-  key={user.id}
-  className="user-row clickable-row"
-  onClick={() => handleRowClick(user)}
->
-
+                  <tr
+                    key={user.id}
+                    className="user-row clickable-row"
+                    onClick={() => handleRowClick(user)}
+                  >
                     <td data-label="Organization">{user.organization}</td>
                     <td>{user.username}</td>
                     <td>{user.email}</td>
                     <td>{user.phoneNumber}</td>
                     <td>{user.dateJoined}</td>
                     <td>
-                  <span className={`status-badge status-badge--${user.status.toLowerCase()}`}>
-  {user.status}
-</span>
-
+                      <span
+                        className={`status-badge status-badge--${user.status.toLowerCase()}`}
+                      >
+                        {user.status}
+                      </span>
                     </td>
                     <td>
                       <div className="action-menu">
@@ -378,9 +374,7 @@ const transformedUsers: User[] = (data as ExtendedUser[]).map((item) => ({
                           <div className="dropdown-menu">
                             <button
                               className="dropdown-item"
-                              onClick={(e) =>
-                                handleViewDetails(e, user, globalIndex)
-                              }
+                              onClick={(e) => handleViewDetails(e, user)}
                             >
                               <Eye size={16} />
                               View Details
@@ -414,15 +408,16 @@ const transformedUsers: User[] = (data as ExtendedUser[]).map((item) => ({
       {filterModalOpen && (
         <>
           <div className="filter-modal-overlay" onClick={handleModalClose} />
-  <div
-  className="filter-modal"
-  style={{
-    '--top': `${modalPosition.top}px`,
-    '--left': `${modalPosition.left}px`
-  } as React.CSSProperties}
-  onClick={(e) => e.stopPropagation()}
->
-
+          <div
+            className="filter-modal"
+            style={
+              {
+                "--top": `${modalPosition.top}px`,
+                "--left": `${modalPosition.left}px`
+              } as React.CSSProperties
+            }
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="filter-modal-header">
               <h3>Filter</h3>
               <button
@@ -573,7 +568,6 @@ const transformedUsers: User[] = (data as ExtendedUser[]).map((item) => ({
             ‹
           </button>
 
-        
           {totalPages > 0 &&
             Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
               let pageNum;
@@ -612,18 +606,17 @@ const transformedUsers: User[] = (data as ExtendedUser[]).map((item) => ({
             </>
           )}
 
-<button
-  className={`pagination-btn ${
-    currentPage === totalPages || totalPages === 0 ? "disabled" : ""
-  }`}
-  onClick={() =>
-    handlePageChange(Math.min(totalPages, currentPage + 1))
-  }
-  disabled={currentPage === totalPages || totalPages === 0}
->
-  ›
-</button>
-
+          <button
+            className={`pagination-btn ${
+              currentPage === totalPages || totalPages === 0 ? "disabled" : ""
+            }`}
+            onClick={() =>
+              handlePageChange(Math.min(totalPages, currentPage + 1))
+            }
+            disabled={currentPage === totalPages || totalPages === 0}
+          >
+            ›
+          </button>
         </div>
       </div>
     </>

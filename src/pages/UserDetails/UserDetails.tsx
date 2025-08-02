@@ -33,6 +33,7 @@ interface ExtendedUser {
 
   accountNumber: number;
   bankName: string;
+  accountBalance: number;
 
   status: string;
   dateJoined: string;
@@ -118,6 +119,7 @@ const fetchUserById = async (id: string) => {
         email: foundUser.guarantor.email,
         relationship: foundUser.guarantor.relationship,
       },
+      accountBalance: 0
     };
 
     setUser(transformedUser);
@@ -290,7 +292,7 @@ const fetchUserById = async (id: string) => {
                 <div className="info-grid">
                   <div className="info-item">
                     <p className="info-label">Level of Education</p>
-                    <p className="info-value">{user.educationLevel}</p>
+                    <p className="info-value">{user.levelOfEducation}</p>
                   </div>
                   <div className="info-item">
                     <p className="info-label">Employment Status</p>
@@ -298,11 +300,11 @@ const fetchUserById = async (id: string) => {
                   </div>
                   <div className="info-item">
                     <p className="info-label">Sector of Employment</p>
-                    <p className="info-value">{user.sector}</p>
+                    <p className="info-value">{user.sectorOfEmployment}</p>
                   </div>
                   <div className="info-item">
                     <p className="info-label">Duration of Employment</p>
-                    <p className="info-value">{user.employmentDuration}</p>
+                    <p className="info-value">{user.durationOfEmployment}</p>
                   </div>
                   <div className="info-item">
                     <p className="info-label">Office Email</p>
@@ -346,7 +348,7 @@ const fetchUserById = async (id: string) => {
                   </div>
                   <div className="info-item">
                     <p className="info-label">Phone Number</p>
-                    <p className="info-value">{user.guarantor?.phoneNumber}</p>
+                    <p className="info-value">{user.guarantor?.phone}</p>
                   </div>
                   <div className="info-item">
                     <p className="info-label">Email Address</p>

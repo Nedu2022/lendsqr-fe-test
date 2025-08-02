@@ -10,30 +10,50 @@ export interface User {
 }
 
 export interface ExtendedUser {
+  createdAt: string;
+  date_joined: any;
+  phoneNumber: any;
+  personal_info: any;
+  profile: any;
   id: string;
-  organisation?: string;
-  orgName?: string;
-  organization?: string;
-  name?: string;
-  email?: string;
-  phone?: string;
-  phoneNumber?: string;
-  status?: string;
-  createdAt?: string;
-  date_joined?: string;
-  accountBalance?: string;
-  educationLevel?: string;
-  sector?: string;
-  employmentDuration?: string;
-  personal_info?: {
-    full_name?: string;
-    email?: string;
-    phone?: string;
-  };
-  profile?: {
-    firstName?: string;
-    lastName?: string;
-    email?: string;
-    phoneNumber?: string;
+  name: string;
+  username: string;
+  email: string;
+  phone: number;
+  bvn: number;
+  gender: string;
+  maritalStatus: string;
+  children: string;
+  residence: string;
+
+  levelOfEducation: string;
+  employmentStatus: string;
+  sectorOfEmployment: string;
+  durationOfEmployment: string;
+  officeEmail: string;
+  monthlyIncome: number[];
+  loanRepayment: number;
+
+  twitter: string;
+  facebook: string;
+  instagram: string;
+
+  accountNumber: number;
+  accountBalance: string;
+  bankName: string;
+
+  status: string;
+  dateJoined: string;
+  organization: string;
+  tier: number;
+
+  guarantor: {
+    fullName: string;
+    phone: number;
+    phoneNumber?: number; 
+    email: string;
+    relationship: string;
   };
 }
+
+
