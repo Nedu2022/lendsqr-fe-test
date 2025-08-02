@@ -55,11 +55,7 @@ Password: admin123
 
 ## 📂 Project Paths
 
-- ✅ **Live Demo:** [Your Vercel/Netlify Link Here]
-- ✅ **GitHub Repo:** [Your GitHub Repo Link Here]
-- ✅ **Loom Video Walkthrough:** [Your Loom Video Link Here]
-- 🔗 **Sample Google Doc Submission:**
-  https://docs.google.com/document/d/1xSAMPLELINK
+- ✅ **Live Demo:** [https://lendsqr-fe-test-nnedu.vercel.app
 
 ---
 
