@@ -55,7 +55,7 @@ Password: admin123
 
 ## 📂 Project Paths
 
-- ✅ **Live Demo:** [https://lendsqr-fe-test-nnedu.vercel.app
+- ✅ **Live Demo:** [https://lendsqr-fe-test-nnedu.vercel.app]
 
 ---
 
